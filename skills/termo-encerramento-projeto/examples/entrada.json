@@ -6,9 +6,9 @@
     "responsavel": "Ana Exemplo"
   },
   "licoes": [
-    {"licao": "A cobertura de Wi-Fi só foi medida depois do planejamento, o que gerou a CR-001.", "plano_acao": "Incluir a medição de infraestrutura na iniciação de projetos com equipamentos móveis."},
-    {"licao": "A documentação desatualizada da API do fornecedor atrasou a integração em duas semanas.", "plano_acao": "Validar a documentação técnica com o fornecedor na reunião de kickoff."},
-    {"licao": "O treinamento feito na própria portaria acelerou a adaptação da equipe.", "plano_acao": "Manter o treinamento no local de trabalho em implantações semelhantes."}
+    {"id": "LIC001", "licao": "A cobertura de Wi-Fi só foi medida depois do planejamento, o que gerou a CR-001.", "plano_acao": "Incluir a medição de infraestrutura na iniciação de projetos com equipamentos móveis."},
+    {"id": "LIC002", "licao": "A documentação desatualizada da API do fornecedor atrasou a integração em duas semanas.", "plano_acao": "Validar a documentação técnica com o fornecedor na reunião de kickoff."},
+    {"id": "LIC003", "licao": "O treinamento feito na própria portaria acelerou a adaptação da equipe.", "plano_acao": "Manter o treinamento no local de trabalho em implantações semelhantes."}
   ],
   "linha_base": {"data_inicio": "11/01/2027", "data_fim": "31/05/2027", "custo": 52800},
   "mudancas_aprovadas": [{"codigo": "CR-001", "prazo_dias": 0, "custo": 2500}],

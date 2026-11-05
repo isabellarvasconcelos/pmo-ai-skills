@@ -15,6 +15,7 @@ Este repositório parte de uma prática real de PMO, reescrita em versão genér
 | [Change Request](skills/change-request/SKILL.md) | Monitoramento e controle | Documento DOCX com a mudança, a análise de impacto e a aprovação |
 | [Ata de Reunião](skills/ata-reuniao/SKILL.md) | Todas | Documento DOCX com decisões e itens de ação, inclusive a partir de anotações soltas |
 | [Termo de Encerramento](skills/termo-encerramento-projeto/SKILL.md) | Encerramento | Documento DOCX com aprendizados, previsto x realizado e status do escopo |
+| [Lições Aprendidas](skills/licoes-aprendidas/SKILL.md) | Monitoramento e controle, encerramento | Planilha XLSX com pontos positivos e negativos e planos de ação |
 
 ## Como testar
 

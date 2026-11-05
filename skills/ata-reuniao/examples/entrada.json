@@ -18,14 +18,14 @@
   "resumo": [
     "O projeto está com 38% realizado, contra 42% previsto, e farol amarelo.",
     "O atraso vem da documentação desatualizada da API do sistema de pátio. O fornecedor já enviou a versão nova.",
-    "A CR-001 propõe dois pontos de acesso Wi-Fi na portaria, com impacto de +5 dias e +R$ 2.500,00.",
+    "A CR-001 propõe dois pontos de acesso Wi-Fi na portaria, com custo de +R$ 2.500,00 e sem mudança na data final.",
     "A antecipação do treinamento foi discutida, mas não houve decisão."
   ],
   "iniciativas": [
     {"categoria": "Melhoria de processo", "nome": "Usar o check-in digital também na saída dos caminhões"}
   ],
   "decisoes": [
-    "Aprovada a CR-001: instalação de dois pontos de acesso Wi-Fi, com impacto de +5 dias e +R$ 2.500,00."
+    "Aprovada a CR-001: instalação de dois pontos de acesso Wi-Fi, com custo de +R$ 2.500,00 e sem mudança na data final."
   ],
   "acoes": [
     {"descricao": "Atualizar o TAP e o cronograma com a CR-001", "responsavel": "Ana Exemplo", "prazo": "09/04/2027", "status": "Pendente"},

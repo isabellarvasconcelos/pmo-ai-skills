@@ -16,6 +16,8 @@ description: Gera o Formulário de Requisição de Mudança (Change Request) em 
 5. Execute `python scripts/gerar_cr.py entrada.json saida.docx`.
 6. Entregue o arquivo, resuma o impacto em prazo e custo e liste os documentos que precisam ser atualizados se a mudança for aprovada.
 
+Em `resumo_impacto`, `prazo_dias` é o deslocamento da **data final do projeto**, e `custo` é a variação do orçamento. Atrasos em atividades que não mudam a data final ficam na justificativa do aspecto "Cronograma".
+
 ## Regras
 
 - **Nunca invente informação.** O que não foi informado aparece como "a definir".

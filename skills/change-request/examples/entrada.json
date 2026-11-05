@@ -14,7 +14,7 @@
     {"aspecto": "Escopo", "justificativa": "A infraestrutura de rede da portaria passa a fazer parte do escopo.", "documento": "TAP, seção 3"},
     {"aspecto": "Técnico", "justificativa": "Inclusão dos novos pontos de acesso na rede corporativa.", "documento": "Solução técnica do TAP"}
   ],
-  "resumo_impacto": {"prazo_dias": 5, "custo": 2500},
+  "resumo_impacto": {"prazo_dias": 0, "custo": 2500},
   "riscos_impactos": {
     "riscos": "Atraso na liberação dos novos pontos de acesso pela equipe de redes.",
     "impactos": "Sem a mudança, a meta de 8 minutos fica ameaçada nos horários de pico."

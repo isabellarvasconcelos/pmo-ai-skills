@@ -166,7 +166,7 @@ def gerar(d, destino, preencher):
 
     resumo = d.get("resumo_impacto", {})
     t = f.tabela(2, 2, [LARGURA / 2] * 2)
-    for j, (rotulo, chave, fmt) in enumerate((("Impacto em prazo", "prazo_dias", lambda v: f"{v:+d} dias corridos"),
+    for j, (rotulo, chave, fmt) in enumerate((("Impacto na data final do projeto", "prazo_dias", lambda v: f"{v:+d} dias corridos" if v else "Data final mantida"),
                                               ("Impacto em custo", "custo", lambda v: "R$ " + f"{v:+,.2f}".replace(",", "_").replace(".", ",").replace("_", ".")))):
         escrever(t.cell(0, j), rotulo, negrito=True)
         sombrear(t.cell(0, j), CLARA)

@@ -34,3 +34,7 @@ No TAP, veja a [entrada de exemplo](skills/tap-termo-abertura-projeto/examples/e
 - **Não inventar dados:** o que não foi informado fica como "a definir".
 - **Manter a pessoa no controle:** a IA prepara o documento, e a revisão e a aprovação continuam sendo humanas.
 - **Validar o que dá para validar:** valores e tipos inválidos são recusados, e os totais vêm de fórmulas.
+
+## Licença
+
+[MIT](LICENSE). Você pode usar, adaptar e redistribuir, mantendo o aviso de copyright.

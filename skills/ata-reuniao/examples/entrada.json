@@ -1,0 +1,40 @@
+{
+  "identificacao": {
+    "titulo": "Comitê de acompanhamento",
+    "projeto": "PRJ-2027-001 | Check-in digital de entregas",
+    "data": "07/04/2027",
+    "horario": "14h00",
+    "duracao": "45 minutos",
+    "local": "Presencial, sala 2"
+  },
+  "participantes": [
+    {"nome": "Ana Exemplo", "funcao": "gerente do projeto"},
+    {"nome": "Bruno Exemplo", "funcao": "sponsor"},
+    {"nome": "Carla Exemplo", "funcao": "PMO"},
+    {"nome": "Daniel Exemplo", "funcao": "Tecnologia"},
+    {"nome": "Eduarda Exemplo", "funcao": "portaria"}
+  ],
+  "objetivo": "Acompanhar o andamento do projeto e avaliar a requisição de mudança CR-001.",
+  "resumo": [
+    "O projeto está com 38% realizado, contra 42% previsto, e farol amarelo.",
+    "O atraso vem da documentação desatualizada da API do sistema de pátio. O fornecedor já enviou a versão nova.",
+    "A CR-001 propõe dois pontos de acesso Wi-Fi na portaria, com impacto de +5 dias e +R$ 2.500,00.",
+    "A antecipação do treinamento foi discutida, mas não houve decisão."
+  ],
+  "iniciativas": [
+    {"categoria": "Melhoria de processo", "nome": "Usar o check-in digital também na saída dos caminhões"}
+  ],
+  "decisoes": [
+    "Aprovada a CR-001: instalação de dois pontos de acesso Wi-Fi, com impacto de +5 dias e +R$ 2.500,00."
+  ],
+  "acoes": [
+    {"descricao": "Atualizar o TAP e o cronograma com a CR-001", "responsavel": "Ana Exemplo", "prazo": "09/04/2027", "status": "Pendente"},
+    {"descricao": "Comprar os pontos de acesso Wi-Fi", "responsavel": "Daniel Exemplo", "prazo": "12/04/2027", "status": "Pendente"},
+    {"descricao": "Atualizar o status do RISC001 na matriz de riscos", "responsavel": "Carla Exemplo", "status": "Pendente"}
+  ],
+  "proximos_passos": [
+    "Próximo comitê em 21/04/2027.",
+    "Retomar a discussão sobre antecipar o treinamento."
+  ],
+  "elaborado_por": "Carla Exemplo (PMO)"
+}

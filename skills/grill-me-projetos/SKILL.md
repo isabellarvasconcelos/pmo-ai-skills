@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Grill Me: Projetos
 
+> Adaptada da skill grill-me de Matt Pocock (MIT), a partir de uma versão de Tiago Ornelas. Veja [CREDITOS.md](CREDITOS.md).
+
 **Antes de começar:** se o que a pessoa descreveu for uma mudança pequena, contida e sem impacto relevante em processo, responsabilidade, aprovação, público ou resultado de projeto, diga isso e ofereça uma conversa breve de alinhamento como caminho mais rápido.
 
 Isto é uma recomendação, não uma barreira: se a pessoa ainda quiser a entrevista completa, prossiga normalmente.

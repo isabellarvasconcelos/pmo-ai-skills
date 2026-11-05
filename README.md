@@ -36,6 +36,10 @@ No TAP, veja a [entrada de exemplo](skills/tap-termo-abertura-projeto/examples/e
 - **Manter a pessoa no controle:** a IA prepara o documento, e a revisão e a aprovação continuam sendo humanas.
 - **Validar o que dá para validar:** valores e tipos inválidos são recusados, e os totais vêm de fórmulas.
 
+## Créditos
+
+A skill [Grill Me: Projetos](skills/grill-me-projetos/SKILL.md) adapta a [grill-me](https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me) de Matt Pocock (MIT), a partir de uma versão de Tiago Ornelas. Veja os [créditos completos](skills/grill-me-projetos/CREDITOS.md).
+
 ## Licença
 
-[MIT](LICENSE). Você pode usar, adaptar e redistribuir, mantendo o aviso de copyright.
+[MIT](LICENSE). Você pode usar, adaptar e redistribuir, mantendo o aviso de copyright. Trechos adaptados de terceiros mantêm também a licença original, indicada nos créditos.

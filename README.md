@@ -12,6 +12,7 @@ Este repositório parte de uma prática real de PMO, reescrita em versão genér
 | [TAP: Termo de Abertura do Projeto](skills/tap-termo-abertura-projeto/SKILL.md) | Iniciação | Planilha XLSX com o termo e as aquisições |
 | [Matriz de Riscos, Issues e Oportunidades](skills/matriz-riscos-issues-oportunidades/SKILL.md) | Planejamento, monitoramento e controle | Planilha XLSX com o registro dos itens e o grau calculado |
 | [Status Report](skills/status-report/SKILL.md) | Monitoramento e controle | Slide PPTX com farol, Curva S, atividades e riscos |
+| [Change Request](skills/change-request/SKILL.md) | Monitoramento e controle | Documento DOCX com a mudança, a análise de impacto e a aprovação |
 
 ## Como testar
 

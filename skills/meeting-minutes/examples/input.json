@@ -1,0 +1,40 @@
+{
+  "identification": {
+    "title": "Steering committee",
+    "project": "PRJ-2027-001 | Digital delivery check-in",
+    "date": "07/04/2027",
+    "time": "2:00 pm",
+    "duration": "45 minutes",
+    "location": "On site, room 2"
+  },
+  "participants": [
+    {"name": "Ana Example", "role": "project manager"},
+    {"name": "Bruno Example", "role": "sponsor"},
+    {"name": "Carla Example", "role": "PMO"},
+    {"name": "Daniel Example", "role": "Technology"},
+    {"name": "Eduarda Example", "role": "gate"}
+  ],
+  "objective": "Follow up on project progress and assess change request CR-001.",
+  "summary": [
+    "The project is 38% complete, against 42% planned, with a yellow light.",
+    "The delay comes from the outdated yard system API documentation. The vendor has already sent the new version.",
+    "CR-001 proposes two Wi-Fi access points at the gate, costing +$2,500.00 with no change to the end date.",
+    "Moving the training earlier was discussed, but no decision was made."
+  ],
+  "initiatives": [
+    {"category": "Process improvement", "name": "Also use digital check-in for trucks leaving the site"}
+  ],
+  "decisions": [
+    "CR-001 approved: installation of two Wi-Fi access points, costing +$2,500.00 with no change to the end date."
+  ],
+  "actions": [
+    {"description": "Update the charter and the schedule with CR-001", "owner": "Ana Example", "due_date": "09/04/2027", "status": "Pending"},
+    {"description": "Buy the Wi-Fi access points", "owner": "Daniel Example", "due_date": "12/04/2027", "status": "Pending"},
+    {"description": "Update the status of RISK001 in the risk matrix", "owner": "Carla Example", "status": "Pending"}
+  ],
+  "next_steps": [
+    "Next committee on 21/04/2027.",
+    "Resume the discussion on moving the training earlier."
+  ],
+  "prepared_by": "Carla Example (PMO)"
+}

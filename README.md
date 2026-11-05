@@ -1,49 +1,49 @@
 # PMO AI Skills
 
-Skills de IA que transformam etapas da gestão de projetos em entregáveis prontos para revisão.
+AI skills that turn project management steps into deliverables ready for review.
 
-Este repositório parte de uma prática real de PMO, reescrita em versão genérica. Todos os exemplos usam dados fictícios.
+This repository comes from real PMO practice, rewritten in a generic version. All examples use fictitious data.
 
 ## Skills
 
-| Skill | Fase | Entrega |
+| Skill | Phase | Output |
 |---|---|---|
-| [Grill Me: Projetos](skills/grill-me-projetos/SKILL.md) | Antes da iniciação | Entrevista de descoberta que termina em um PRD |
-| [TAP: Termo de Abertura do Projeto](skills/tap-termo-abertura-projeto/SKILL.md) | Iniciação | Planilha XLSX com o termo e as aquisições |
-| [Matriz de Riscos, Issues e Oportunidades](skills/matriz-riscos-issues-oportunidades/SKILL.md) | Planejamento, monitoramento e controle | Planilha XLSX com o registro dos itens e o grau calculado |
-| [Status Report](skills/status-report/SKILL.md) | Monitoramento e controle | Slide PPTX com farol, Curva S, atividades e riscos |
-| [Change Request](skills/change-request/SKILL.md) | Monitoramento e controle | Documento DOCX com a mudança, a análise de impacto e a aprovação |
-| [Ata de Reunião](skills/ata-reuniao/SKILL.md) | Todas | Documento DOCX com decisões e itens de ação, inclusive a partir de anotações soltas |
-| [Termo de Encerramento](skills/termo-encerramento-projeto/SKILL.md) | Encerramento | Documento DOCX com aprendizados, previsto x realizado e status do escopo |
-| [Lições Aprendidas](skills/licoes-aprendidas/SKILL.md) | Monitoramento e controle, encerramento | Planilha XLSX com pontos positivos e negativos e planos de ação |
+| [Grill Me: Projects](skills/grill-me-projects/SKILL.md) | Before initiation | Discovery interview that ends in a PRD |
+| [Project Charter](skills/project-charter/SKILL.md) | Initiation | XLSX spreadsheet with the charter and procurement |
+| [Risk, Issue and Opportunity Matrix](skills/risk-issue-opportunity-matrix/SKILL.md) | Planning, monitoring and controlling | XLSX spreadsheet with the item log and computed rating |
+| [Status Report](skills/status-report/SKILL.md) | Monitoring and controlling | PPTX slide with traffic light, S-curve, activities and risks |
+| [Change Request](skills/change-request/SKILL.md) | Monitoring and controlling | DOCX document with the change, impact analysis and approval |
+| [Meeting Minutes](skills/meeting-minutes/SKILL.md) | All | DOCX document with decisions and action items, including from loose notes |
+| [Project Closure](skills/project-closure/SKILL.md) | Closing | DOCX document with lessons, planned x actual and scope status |
+| [Lessons Learned](skills/lessons-learned/SKILL.md) | Monitoring and controlling, closing | XLSX spreadsheet with positive and negative points and action plans |
 
-## Como testar
+## How to try it
 
-Requer Python 3.9 ou mais recente.
+Requires Python 3.9 or later.
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-cd skills/tap-termo-abertura-projeto
-python scripts/gerar_tap.py examples/entrada.json meu_tap.xlsx
+cd skills/project-charter
+python scripts/generate_charter.py examples/input.json my_charter.xlsx
 ```
 
-As skills que geram arquivos têm seu próprio script, além de uma entrada de exemplo e o resultado gerado em `examples/`. A Grill Me é só uma conversa: veja a [sessão de exemplo](skills/grill-me-projetos/examples/sessao-checkin-digital.md).
+Skills that generate files have their own script, plus a sample input and the generated output in `examples/`. Grill Me is a conversation only: see the [sample session](skills/grill-me-projects/examples/discovery-session.md).
 
-No TAP, veja a [entrada de exemplo](skills/tap-termo-abertura-projeto/examples/entrada.json), o [resultado gerado](skills/tap-termo-abertura-projeto/examples/saida.xlsx) e o [modelo em branco](skills/tap-termo-abertura-projeto/assets/modelo_tap.xlsx).
+All skills use the same fictitious project, a digital delivery check-in, so the numbers match from one document to the next.
 
-## Princípios
+## Principles
 
-- **Não inventar dados:** o que não foi informado fica como "a definir".
-- **Manter a pessoa no controle:** a IA prepara o documento, e a revisão e a aprovação continuam sendo humanas.
-- **Validar o que dá para validar:** valores e tipos inválidos são recusados, e os totais vêm de fórmulas.
+- **Never make up data:** anything not provided shows as "TBD".
+- **Keep people in control:** the AI prepares the document, and review and approval remain human.
+- **Validate what can be validated:** invalid values and types are rejected, and totals come from formulas.
 
-## Créditos
+## Credits
 
-A skill [Grill Me: Projetos](skills/grill-me-projetos/SKILL.md) adapta a [grill-me](https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me) de Matt Pocock (MIT), a partir de uma versão de Tiago Ornelas. Veja os [créditos completos](skills/grill-me-projetos/CREDITOS.md).
+The [Grill Me: Projects](skills/grill-me-projects/SKILL.md) skill adapts Matt Pocock's [grill-me](https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me) (MIT), based on a version by Tiago Ornelas. See the [full credits](skills/grill-me-projects/CREDITS.md).
 
-## Licença
+## License
 
-[MIT](LICENSE). Você pode usar, adaptar e redistribuir, mantendo o aviso de copyright. Trechos adaptados de terceiros mantêm também a licença original, indicada nos créditos.
+[MIT](LICENSE). You may use, adapt and redistribute it, keeping the copyright notice. Third-party adapted parts also keep their original license, as stated in the credits.

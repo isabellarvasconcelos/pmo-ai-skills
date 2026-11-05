@@ -1,0 +1,52 @@
+{
+  "identification": {
+    "code": "PRJ-2027-001",
+    "title": "Digital delivery check-in",
+    "date": "18/01/2027",
+    "owner": "Ana Example"
+  },
+  "items": [
+    {
+      "description": "Wi-Fi coverage at the gate may not be enough for the tablets",
+      "type": "RISK",
+      "impact": "Delayed check-in and a temporary return to paper",
+      "impact_level": 4,
+      "probability": 4,
+      "response": "Mitigate",
+      "action_plan": "Measure the signal before purchasing and enable offline mode",
+      "cost": 2500,
+      "status": "OPEN",
+      "notes": "Comes from an assumption in the charter."
+    },
+    {
+      "description": "Tablet delivery may be late",
+      "type": "RISK",
+      "impact": "Team training postponed",
+      "impact_level": 3,
+      "probability": 2,
+      "response": "Mitigate",
+      "action_plan": "Place the order 45 days in advance",
+      "status": "OPEN"
+    },
+    {
+      "description": "The yard system API documentation is outdated",
+      "type": "ISSUE",
+      "impact": "More time to build the integration",
+      "impact_level": 3,
+      "probability": 5,
+      "response": "Avoid",
+      "action_plan": "Review the API with the vendor",
+      "cost": 0,
+      "status": "OPEN"
+    },
+    {
+      "description": "The solution may be reused at other sites",
+      "type": "OPPORTUNITY",
+      "impact": "Lower cost for future rollouts",
+      "response": "Exploit",
+      "action_plan": "Document the rollout as a reference",
+      "status": "OPEN",
+      "notes": "Scores not assessed yet."
+    }
+  ]
+}

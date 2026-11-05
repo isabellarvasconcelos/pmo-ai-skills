@@ -1,0 +1,25 @@
+{
+  "identification": {
+    "code": "PRJ-2027-001",
+    "title": "Digital delivery check-in",
+    "date": "18/06/2027",
+    "owner": "Ana Example"
+  },
+  "lessons": [
+    {"id": "LL001", "lesson": "Wi-Fi coverage was only measured after planning, which led to CR-001.", "action_plan": "Include an infrastructure survey in the initiation of projects with mobile devices."},
+    {"id": "LL002", "lesson": "The vendor's outdated API documentation delayed the integration by two weeks.", "action_plan": "Validate the technical documentation with the vendor at the kickoff meeting."},
+    {"id": "LL003", "lesson": "Training held at the gate itself sped up the team's adaptation.", "action_plan": "Keep on-site training in similar rollouts."}
+  ],
+  "baseline": {"start_date": "11/01/2027", "end_date": "31/05/2027", "cost": 52800},
+  "approved_changes": [{"code": "CR-001", "schedule_days": 0, "cost": 2500}],
+  "actual": {"end_date": "04/06/2027", "cost": 54100},
+  "scope": {
+    "completed": true,
+    "accepted": true,
+    "open_items": true,
+    "open_items_detail": "Queue dashboard on the receiving area monitor, handed over to the Technology team with a 30/06/2027 due date."
+  },
+  "reason": "COMPLETION",
+  "remarks": "Average service time at the gate was 7 minutes in the 30 days after go-live, below the 8-minute target.",
+  "signatures": {"manager": "Ana Example", "sponsor": "Bruno Example", "pmo": "Carla Example"}
+}

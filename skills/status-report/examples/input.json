@@ -1,0 +1,29 @@
+{
+  "identification": {
+    "title": "Digital delivery check-in",
+    "code": "PRJ-2027-001",
+    "status_date": "31/03/2027",
+    "start_date": "11/01/2027",
+    "end_date": "31/05/2027"
+  },
+  "criticality": "MEDIUM",
+  "planned": 42,
+  "actual": 38,
+  "s_curve": {
+    "periods": ["Jan", "Feb", "Mar", "Apr", "May"],
+    "planned": [5, 18, 42, 75, 100],
+    "actual": [5, 16, 38]
+  },
+  "upcoming_activities": [
+    {"activity": "Approve the integration with the yard system", "owner": "Daniel Example", "end_date": "15/04/2027"},
+    {"activity": "Install the tablets at the gate", "owner": "Purchasing", "end_date": "22/04/2027"},
+    {"activity": "Train the gate team", "owner": "Ana Example", "end_date": "30/04/2027"}
+  ],
+  "late_activities": [
+    {"activity": "Review the API with the vendor", "area": "Technology", "end_date": "20/03/2027"}
+  ],
+  "risks": [
+    {"description": "Insufficient Wi-Fi coverage at the gate", "probability": 4, "severity": 4, "action_plan": "Measure the signal and enable offline mode"},
+    {"description": "Late tablet delivery", "probability": 2, "severity": 3, "action_plan": "Order 45 days in advance"}
+  ]
+}

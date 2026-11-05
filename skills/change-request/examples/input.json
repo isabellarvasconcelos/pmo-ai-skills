@@ -1,0 +1,28 @@
+{
+  "identification": {
+    "code": "PRJ-2027-001",
+    "title": "Digital delivery check-in",
+    "change_code": "CR-001",
+    "requested_by": "Daniel Example (Technology)",
+    "request_date": "05/04/2027"
+  },
+  "description": "Install two additional Wi-Fi access points at the gate before the tablets are installed.",
+  "justification": "The signal survey confirmed risk RISK001: current coverage does not support the tablets at peak arrival times. Without the access points, check-in would rely on offline mode all the time, and the queue would no longer be visible in real time.",
+  "impacts": [
+    {"aspect": "Schedule", "justification": "Tablet installation moves from 22/04 to 27/04/2027. The 31/05 go-live date is kept.", "document": "Project schedule"},
+    {"aspect": "Costs", "justification": "Purchase and installation of two access points, already planned as the action for RISK001.", "document": "Charter, Procurement sheet"},
+    {"aspect": "Scope", "justification": "The gate network infrastructure becomes part of the scope.", "document": "Charter, section 3"},
+    {"aspect": "Technical", "justification": "The new access points are added to the corporate network.", "document": "Charter technical solution"}
+  ],
+  "impact_summary": {"schedule_days": 0, "cost": 2500},
+  "risks_and_impacts": {
+    "risks": "The network team may be late in releasing the new access points.",
+    "impacts": "Without the change, the 8-minute target is at risk during peak hours."
+  },
+  "execution_plan": [
+    {"activity": "Buy the access points", "owner": "Purchasing", "date": "12/04/2027", "duration": "5 days"},
+    {"activity": "Install and configure on the network", "owner": "Technology", "date": "20/04/2027", "duration": "2 days"},
+    {"activity": "Survey the signal again", "owner": "Daniel Example", "date": "22/04/2027", "duration": "1 day"}
+  ],
+  "notes": "If approved, update the charter, the schedule and the status of RISK001 in the risk matrix."
+}

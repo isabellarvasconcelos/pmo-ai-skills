@@ -1,0 +1,52 @@
+{
+  "identification": {
+    "code": "PRJ-2027-001",
+    "title": "Digital delivery check-in",
+    "date": "15/06/2027",
+    "owner": "Carla Example"
+  },
+  "lessons": [
+    {
+      "date": "05/04/2027",
+      "type": "NEGATIVE",
+      "description": "Wi-Fi coverage was only measured after planning, which led to CR-001.",
+      "area": "Technology",
+      "action_plan": "Include an infrastructure survey in the initiation of projects with mobile devices.",
+      "owner": "Carla Example",
+      "status": "OPEN",
+      "timing": "FUTURE PROJECTS"
+    },
+    {
+      "date": "18/03/2027",
+      "type": "NEGATIVE",
+      "description": "The vendor's outdated API documentation delayed the integration by two weeks.",
+      "area": "Technology",
+      "action_plan": "Validate the technical documentation with the vendor at the kickoff meeting.",
+      "owner": "Daniel Example",
+      "status": "DONE",
+      "closing_date": "10/06/2027",
+      "timing": "FUTURE PROJECTS",
+      "notes": "Added to the standard kickoff agenda."
+    },
+    {
+      "date": "30/04/2027",
+      "type": "POSITIVE",
+      "description": "Training held at the gate itself sped up the team's adaptation.",
+      "area": "Operations",
+      "action_plan": "Keep on-site training in similar rollouts.",
+      "owner": "Ana Example",
+      "status": "DONE",
+      "closing_date": "15/06/2027",
+      "timing": "AT CLOSURE"
+    },
+    {
+      "date": "07/04/2027",
+      "type": "POSITIVE",
+      "description": "Weekly measurement of service time made it possible to track the target from the start of operation.",
+      "area": "Logistics",
+      "action_plan": "Define the indicator and how it is measured in the charter of future projects.",
+      "status": "OPEN",
+      "timing": "FUTURE PROJECTS"
+    }
+  ]
+}

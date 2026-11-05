@@ -1,27 +1,27 @@
 ---
 name: change-request
-description: Gera o Formulário de Requisição de Mudança (Change Request) em DOCX, com descrição da mudança, análise de impacto por aspecto, riscos, plano de execução e avaliação final. Use quando o usuário pedir para formalizar uma mudança de escopo, prazo, custo ou requisito em um projeto já em andamento.
+description: Generates the Change Request form as a DOCX file, with change description, impact analysis by aspect, risks, execution plan and final decision. Use when the user asks to formalize a change in scope, schedule, cost or requirements of a project already in progress.
 ---
 
-# Change Request: Requisição de Mudança
+# Change Request
 
-**Fase do ciclo de vida:** monitoramento e controle, a qualquer momento da execução.
+**Project life cycle phase:** monitoring and controlling, at any point during execution.
 
-## Fluxo
+## Workflow
 
-1. Entenda a mudança: o que muda, por que muda e quem pediu.
-2. Avalie o impacto em cada aspecto: cronograma, requisitos, recursos, custos, escopo, técnico e funcional. Pergunte o que não estiver claro, e não marque um aspecto como impactado sem justificativa.
-3. Se houver TAP, matriz de riscos ou status report do projeto, use-os para comparar com a linha de base e apontar o que precisa ser atualizado.
-4. Monte um JSON com a estrutura de `examples/entrada.json`. Omita o que não tiver sido informado.
-5. Execute `python scripts/gerar_cr.py entrada.json saida.docx`.
-6. Entregue o arquivo, resuma o impacto em prazo e custo e liste os documentos que precisam ser atualizados se a mudança for aprovada.
+1. Understand the change: what changes, why it changes and who requested it.
+2. Assess the impact on each aspect: schedule, requirements, resources, costs, scope, technical and functional. Ask about anything unclear, and do not mark an aspect as impacted without a justification.
+3. If the project has a charter, risk matrix or status report, use them to compare against the baseline and point out what needs to be updated.
+4. Build a JSON file with the structure of `examples/input.json`. Leave out anything that was not provided.
+5. Run `python scripts/generate_change_request.py input.json output.docx`.
+6. Deliver the file, summarize the schedule and cost impact and list the documents that must be updated if the change is approved.
 
-Em `resumo_impacto`, `prazo_dias` é o deslocamento da **data final do projeto**, e `custo` é a variação do orçamento. Atrasos em atividades que não mudam a data final ficam na justificativa do aspecto "Cronograma".
+In `impact_summary`, `schedule_days` is the shift of the **project end date**, and `cost` is the budget variation. Delays in activities that do not move the end date belong in the justification of the "Schedule" aspect.
 
-## Regras
+## Rules
 
-- **Nunca invente informação.** O que não foi informado aparece como "a definir".
-- Todo aspecto marcado como impactado precisa de justificativa. O script recusa um impacto sem ela.
-- A decisão (`APROVADO` ou `REPROVADO`) só deve ser preenchida quando informada pelo usuário. Sem ela, o formulário sai pendente de avaliação.
-- Uma mudança aprovada altera a linha de base: lembre o usuário de atualizar o TAP, o cronograma e a matriz de riscos.
-- Mantenha um tom direto e executivo.
+- **Never make up information.** Anything not provided shows as "TBD".
+- Every aspect marked as impacted needs a justification. The script rejects an impact without one.
+- Fill in the decision (`APPROVED` or `REJECTED`) only when the user provides it. Without it, the form is marked as pending review.
+- An approved change alters the baseline: remind the user to update the charter, the schedule and the risk matrix.
+- Keep a direct, executive tone.

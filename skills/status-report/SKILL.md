@@ -1,40 +1,40 @@
 ---
 name: status-report
-description: Gera o Status Report de um projeto em um slide PPTX, com farol, % previsto x realizado, Curva S, próximas atividades, atividades atrasadas e riscos. Use quando o usuário pedir o status report periódico de um projeto.
+description: Generates a project Status Report as a one-slide PPTX, with traffic light, planned x actual %, S-curve, upcoming activities, late activities and risks. Use when the user asks for the periodic status report of a project.
 ---
 
 # Status Report
 
-**Fase do ciclo de vida:** monitoramento e controle.
+**Project life cycle phase:** monitoring and controlling.
 
-## Fluxo
+## Workflow
 
-1. Reúna os dados do período: % previsto e realizado, Curva S, próximas atividades, atividades atrasadas e riscos ativos.
-2. Se houver uma matriz de riscos, use os itens abertos de grau "Significativo" e "Importante".
-3. Pergunte a criticidade do projeto se ela não tiver sido informada, porque ela define o farol e a periodicidade.
-4. Monte um JSON com a estrutura de `examples/entrada.json`. Omita o que não tiver sido informado.
-5. Execute `python scripts/gerar_status.py entrada.json saida.pptx`.
-6. Entregue o arquivo, informe o farol e o desvio e, se o farol estiver vermelho, diga quem deve ser acionado.
+1. Gather the data for the period: planned and actual %, S-curve, upcoming activities, late activities and active risks.
+2. If there is a risk matrix, use the open items rated "Significant" and "Important".
+3. Ask for the project criticality if it was not given, because it defines the traffic light and the reporting frequency.
+4. Build a JSON file with the structure of `examples/input.json`. Leave out anything that was not provided.
+5. Run `python scripts/generate_status.py input.json output.pptx`.
+6. Deliver the file, state the traffic light and the deviation and, if the light is red, say who must be escalated to.
 
-## Farol
+## Traffic light
 
-O desvio é relativo ao previsto: `(previsto - realizado) / previsto`. Um projeto adiantado tem desvio negativo.
+The deviation is relative to the plan: `(planned - actual) / planned`. A project ahead of plan has a negative deviation.
 
-| Criticidade | Periodicidade | Limite de escalonamento | Ação acima do limite |
+| Criticality | Frequency | Escalation threshold | Action above the threshold |
 |---|---|---|---|
-| BAIXO | Quinzenal | 15% | Acionar o gerente de projetos |
-| MÉDIO | Semanal | 10% | Acionar o sponsor e o gerente |
-| ALTO | Semanal, com reunião executiva mensal | 5% | Convocar gerentes e diretoria |
+| LOW | Every two weeks | 15% | Escalate to the project manager |
+| MEDIUM | Weekly | 10% | Escalate to the sponsor and the manager |
+| HIGH | Weekly, with a monthly executive meeting | 5% | Call managers and executive leadership |
 
-- **Verde:** desvio de até metade do limite.
-- **Amarelo:** desvio acima da metade do limite, até o limite.
-- **Vermelho:** desvio acima do limite, o que exige escalonamento.
-- **Cinza:** faltam o previsto, o realizado ou a criticidade.
+- **Green:** deviation up to half the threshold.
+- **Yellow:** deviation above half the threshold, up to the threshold.
+- **Red:** deviation above the threshold, which requires escalation.
+- **Gray:** planned %, actual % or criticality is missing.
 
-## Regras
+## Rules
 
-- **Nunca invente informação.** O que não foi informado aparece como "a definir".
-- Não escolha a cor do farol à mão. O script calcula a partir dos dados.
-- O slide tem espaço limitado. Se houver mais itens do que cabem, o script avisa quantos ficaram de fora. Priorize os mais críticos e cite os demais na resposta.
-- Em riscos, `severidade` corresponde ao nível de consequência da matriz de riscos.
-- Mantenha um tom direto e executivo.
+- **Never make up information.** Anything not provided shows as "TBD".
+- Do not choose the light color by hand. The script computes it from the data.
+- The slide has limited space. If there are more items than fit, the script says how many were left out. Prioritize the most critical ones and mention the others in your reply.
+- For risks, `severity` matches the impact level in the risk matrix.
+- Keep a direct, executive tone.

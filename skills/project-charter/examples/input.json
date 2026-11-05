@@ -1,0 +1,56 @@
+{
+  "identification": {
+    "title": "Digital delivery check-in",
+    "code": "PRJ-2027-001",
+    "start_date": "11/01/2027",
+    "duration": "4 months",
+    "manager": "Ana Example",
+    "sponsor": "Bruno Example (Operations Director)",
+    "area": "Logistics",
+    "pmo": "Carla Example"
+  },
+  "business_case": "Truck check-in is done on paper, which creates queues at the gate and makes deliveries hard to track.",
+  "objective": "Implement digital check-in at the gate by 31/05/2027, reducing the average service time from 20 to 8 minutes.",
+  "as_is": "The driver fills in a paper form, and the gate team types the data into the system at the end of the shift.",
+  "to_be": "The driver checks in on a tablet, and the data reaches the yard management system in real time.",
+  "product_scope": "Check-in app on tablets at the gate, integrated with the yard management system.",
+  "in_scope": ["Check-in app", "Integration with the yard management system", "Gate team training"],
+  "out_of_scope": ["Online delivery scheduling", "Rollout to other sites"],
+  "acceptance_criteria": ["Average service time of up to 8 minutes for 30 days", "Gate team trained, with attendance list"],
+  "assumptions": ["The gate will have Wi-Fi coverage during the rollout"],
+  "constraints": ["Go-live by 31/05/2027", "Budget capped at $60,000.00"],
+  "functional_requirements": [
+    {"id": "FR01", "description": "Record plate, carrier and invoice at check-in", "area": "Logistics", "priority": "High"},
+    {"id": "FR02", "description": "Show the vehicle queue in real time", "area": "Logistics", "priority": "Medium"}
+  ],
+  "technical_requirements": [
+    {"id": "TR01", "description": "Keep records during connection drops and sync them later", "owner": "Technology", "priority": "High"}
+  ],
+  "business_rules": [
+    {"id": "BR01", "description": "A vehicle without a valid invoice cannot complete check-in"}
+  ],
+  "solution": {
+    "description": "Tablet app integrated through an API with the yard management system.",
+    "systems": "Check-in app; yard management system",
+    "interfaces": "Tablet screen; gate dashboard",
+    "infrastructure": "Tablets; Wi-Fi"
+  },
+  "integrations": [
+    {"source": "Check-in app", "target": "Yard management system", "type": "REST API", "description": "Sends check-in records"}
+  ],
+  "impacts": ["Logistics", "Technology", "Safety"],
+  "resources": [
+    {"name": "Ana Example", "area": "PMO", "role": "Project manager, 50%"},
+    {"name": "Daniel Example", "area": "Technology", "role": "Developer, 100%"}
+  ],
+  "costs": [
+    {"category": "Implementation consulting", "type": "CAPEX", "amount": 18000},
+    {"category": "Training", "type": "OPEX", "amount": 6000}
+  ],
+  "procurement": [
+    {"item": "Tablet", "quantity": 10, "unit_price": 1800, "type": "CAPEX", "needed_by": "01/03/2027", "owner": "Purchasing", "status": "Planned"},
+    {"item": "Monthly app license", "quantity": 12, "unit_price": 900, "type": "OPEX", "needed_by": "01/04/2027", "owner": "Technology", "status": "Planned"}
+  ],
+  "status": "Under review",
+  "notes": "Company, people and amounts are fictitious."
+}

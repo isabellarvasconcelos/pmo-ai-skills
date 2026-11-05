@@ -86,7 +86,7 @@ def numerar(itens):
     return saida, prox
 
 
-def aba_matriz(ws, d, preencher):
+def aba_matriz(ws, d, preencher, calculados):
     ident = d.get("identificacao", {})
     ws.merge_cells("A1:L1")
     ws["A1"] = "MATRIZ DE RISCOS, ISSUES E OPORTUNIDADES"
@@ -116,6 +116,9 @@ def aba_matriz(ws, d, preencher):
         vazio = A_DEFINIR if item else None
         pegar = (lambda k: item.get(k) if item.get(k) is not None else vazio) if item else (lambda k: None)
         nota = f"E{lin}*F{lin}"
+        if item:
+            c, p = item.get("consequencia_nivel"), item.get("probabilidade")
+            calculados[f"G{lin}"] = grau(c * p) if c and p else A_DEFINIR
         valores = [ident_item, pegar("descricao"), pegar("tipo"), pegar("consequencia"),
                    pegar("consequencia_nivel"), pegar("probabilidade"),
                    f'=IF(COUNT(E{lin},F{lin})=2,{formula_nota(nota)},IF(B{lin}="","","{A_DEFINIR}"))',
@@ -168,12 +171,44 @@ def aba_grau(ws):
 def gerar(d, destino, preencher):
     wb = Workbook()
     wb.active.title = "Matriz"
-    aba_matriz(wb.active, d, preencher)
+    calculados = {}
+    aba_matriz(wb.active, d, preencher, calculados)
     aba_grau(wb.create_sheet("Grau"))
     wb.properties.creator = wb.properties.lastModifiedBy = "pmo-ai-skills"
     wb.properties.title = "Matriz de Riscos, Issues e Oportunidades"
     wb.calculation.fullCalcOnLoad = True
     wb.save(destino)
+    gravar_valores(destino, {1: calculados})
+
+
+def gravar_valores(destino, valores):
+    """Grava os resultados já calculados ao lado das fórmulas.
+
+    O Excel recalcula ao abrir, mas pré-visualizações (e-mail, Quick Look, navegadores)
+    só mostram o valor salvo. valores: {número da aba: {"G10": valor}}.
+    """
+    import re
+    import zipfile
+    from xml.sax.saxutils import escape
+
+    with zipfile.ZipFile(destino) as z:
+        arquivos = {n: z.read(n) for n in z.namelist()}
+    for aba, celulas in valores.items():
+        nome = f"xl/worksheets/sheet{aba}.xml"
+        xml = arquivos[nome].decode("utf-8")
+        for ref, valor in celulas.items():
+            if valor is None or valor == "":
+                continue
+            tipo = ' t="str"' if isinstance(valor, str) else ""
+            conteudo = escape(valor) if isinstance(valor, str) else repr(float(valor))
+            padrao = re.compile(rf'<c r="{ref}"( s="\d+")?><f>(.*?)</f>(?:<v\s*/>|<v></v>)</c>')
+            xml, n = padrao.subn(lambda m: f'<c r="{ref}"{m.group(1) or ""}{tipo}><f>{m.group(2)}</f><v>{conteudo}</v></c>', xml)
+            if n != 1:
+                raise RuntimeError(f"Fórmula não encontrada em {ref} da aba {aba}")
+        arquivos[nome] = xml.encode("utf-8")
+    with zipfile.ZipFile(destino, "w", zipfile.ZIP_DEFLATED) as z:
+        for n, conteudo in arquivos.items():
+            z.writestr(n, conteudo)
 
 
 def main():

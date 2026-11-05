@@ -130,7 +130,7 @@ def validar(d):
         sys.exit("Entrada inválida:\n- " + "\n- ".join(erros))
 
 
-def aba_tap(ws, d, preencher):
+def aba_tap(ws, d, preencher, calculados):
     f = Folha(ws, preencher)
     ident = d.get("identificacao", {})
     f.celula(1, COLUNAS, "TERMO DE ABERTURA DO PROJETO", negrito=True, cor="FFFFFF", fundo=PRIMARIA).font = Font(
@@ -198,6 +198,9 @@ def aba_tap(ws, d, preencher):
     ultima = f.linha - 1
     f.celula(1, 6, "Subtotal", negrito=True, fundo=CLARA)
     f.celula(7, 2, f"=SUM(G{primeira}:G{ultima})", negrito=True, formato=MOEDA)
+    subtotal = sum(i.get("valor") or 0 for i in custos) if preencher else 0
+    compras = sum((i.get("quantidade") or 0) * (i.get("valor_unitario") or 0) for i in d.get("aquisicoes", [])) if preencher else 0
+    calculados.update({f"G{f.linha}": subtotal, f"G{f.linha + 1}": compras, f"G{f.linha + 2}": subtotal + compras})
     f.linha += 1
     f.celula(1, 6, 'Total da aba "Aquisições"', negrito=True, fundo=CLARA)
     f.celula(7, 2, "='Aquisições'!D4", negrito=True, formato=MOEDA)
@@ -222,7 +225,7 @@ def aba_tap(ws, d, preencher):
     ws.sheet_properties.pageSetUpPr.fitToPage = True
 
 
-def aba_aquisicoes(ws, d, preencher):
+def aba_aquisicoes(ws, d, preencher, calculados):
     larguras = [38, 8, 16, 16, 9, 15, 20, 14]
     for i, w in enumerate(larguras, 1):
         ws.column_dimensions[col(i)].width = w
@@ -253,6 +256,8 @@ def aba_aquisicoes(ws, d, preencher):
         def resto(chave):
             return item.get(chave) or (A_DEFINIR if item else None)
         qtd, unit = item.get("quantidade"), item.get("valor_unitario")
+        if qtd is not None and unit is not None:
+            calculados[f"D{lin}"] = qtd * unit
         valores = [resto("objeto"), qtd, unit, f'=IF(OR(B{lin}="",C{lin}=""),"",B{lin}*C{lin})',
                    resto("tipo"), resto("data_necessidade"), resto("responsavel"), resto("status")]
         for j, v in enumerate(valores, 1):
@@ -262,19 +267,52 @@ def aba_aquisicoes(ws, d, preencher):
             if j in (3, 4):
                 c.number_format = MOEDA
     ws["D4"] = f"=SUM(D6:D{5 + n})"
+    calculados["D4"] = sum(v for k, v in calculados.items() if k != "D4")
     ws["D4"].font, ws["D4"].number_format = fonte(bold=True), MOEDA
 
 
 def gerar(d, destino, preencher):
     wb = Workbook()
-    aba_tap(wb.active, d, preencher)
+    tap, aquisicoes = {}, {}
+    aba_tap(wb.active, d, preencher, tap)
     wb.active.title = "TAP"
-    aba_aquisicoes(wb.create_sheet("Aquisições"), d, preencher)
+    aba_aquisicoes(wb.create_sheet("Aquisições"), d, preencher, aquisicoes)
     wb.properties.creator = "pmo-ai-skills"
     wb.properties.lastModifiedBy = "pmo-ai-skills"
     wb.properties.title = "Termo de Abertura do Projeto"
     wb.calculation.fullCalcOnLoad = True
     wb.save(destino)
+    gravar_valores(destino, {1: tap, 2: aquisicoes})
+
+
+def gravar_valores(destino, valores):
+    """Grava os resultados já calculados ao lado das fórmulas.
+
+    O Excel recalcula ao abrir, mas pré-visualizações (e-mail, Quick Look, navegadores)
+    só mostram o valor salvo. valores: {número da aba: {"G10": valor}}.
+    """
+    import re
+    import zipfile
+    from xml.sax.saxutils import escape
+
+    with zipfile.ZipFile(destino) as z:
+        arquivos = {n: z.read(n) for n in z.namelist()}
+    for aba, celulas in valores.items():
+        nome = f"xl/worksheets/sheet{aba}.xml"
+        xml = arquivos[nome].decode("utf-8")
+        for ref, valor in celulas.items():
+            if valor is None or valor == "":
+                continue
+            tipo = ' t="str"' if isinstance(valor, str) else ""
+            conteudo = escape(valor) if isinstance(valor, str) else repr(float(valor))
+            padrao = re.compile(rf'<c r="{ref}"( s="\d+")?><f>(.*?)</f>(?:<v\s*/>|<v></v>)</c>')
+            xml, n = padrao.subn(lambda m: f'<c r="{ref}"{m.group(1) or ""}{tipo}><f>{m.group(2)}</f><v>{conteudo}</v></c>', xml)
+            if n != 1:
+                raise RuntimeError(f"Fórmula não encontrada em {ref} da aba {aba}")
+        arquivos[nome] = xml.encode("utf-8")
+    with zipfile.ZipFile(destino, "w", zipfile.ZIP_DEFLATED) as z:
+        for n, conteudo in arquivos.items():
+            z.writestr(n, conteudo)
 
 
 def total_previsto(d):

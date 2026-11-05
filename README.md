@@ -10,10 +10,11 @@ Este repositório parte de uma prática real de PMO, reescrita em versão genér
 |---|---|---|
 | [TAP: Termo de Abertura do Projeto](skills/tap-termo-abertura-projeto/SKILL.md) | Iniciação | Planilha XLSX com o termo e as aquisições |
 | [Matriz de Riscos, Issues e Oportunidades](skills/matriz-riscos-issues-oportunidades/SKILL.md) | Planejamento, monitoramento e controle | Planilha XLSX com o registro dos itens e o grau calculado |
+| [Status Report](skills/status-report/SKILL.md) | Monitoramento e controle | Slide PPTX com farol, Curva S, atividades e riscos |
 
 ## Como testar
 
-Requer Python 3.
+Requer Python 3.9 ou mais recente.
 
 ```bash
 python3 -m venv .venv

@@ -177,7 +177,7 @@ Never write "as discussed", "as per our previous conversation" or similar.
 
 ### Language
 
-Write the PRD in English, unless the person explicitly asks for another language. Keep the same language throughout the document.
+Write the PRD in the language the person uses in the conversation, such as English or Brazilian Portuguese, unless they ask for another one. Keep the same language throughout the document.
 
 ### Synthesis process
 

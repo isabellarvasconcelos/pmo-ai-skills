@@ -1,0 +1,73 @@
+{
+  "language": "pt-BR",
+  "identification": {
+    "title": "Comitê de acompanhamento",
+    "project": "PRJ-2027-001 | Check-in digital de entregas",
+    "date": "07/04/2027",
+    "time": "14h00",
+    "duration": "45 minutos",
+    "location": "Presencial, sala 2"
+  },
+  "participants": [
+    {
+      "name": "Ana Exemplo",
+      "role": "gerente do projeto"
+    },
+    {
+      "name": "Bruno Exemplo",
+      "role": "sponsor"
+    },
+    {
+      "name": "Carla Exemplo",
+      "role": "PMO"
+    },
+    {
+      "name": "Daniel Exemplo",
+      "role": "Tecnologia"
+    },
+    {
+      "name": "Eduarda Exemplo",
+      "role": "portaria"
+    }
+  ],
+  "objective": "Acompanhar o andamento do projeto e avaliar a requisição de mudança CR-001.",
+  "summary": [
+    "O projeto está com 38% realizado, contra 42% previsto, e farol amarelo.",
+    "O atraso vem da documentação desatualizada da API do sistema de pátio. O fornecedor já enviou a versão nova.",
+    "A CR-001 propõe dois pontos de acesso Wi-Fi na portaria, com custo de +R$ 2.500,00 e sem mudança na data final.",
+    "A antecipação do treinamento foi discutida, mas não houve decisão."
+  ],
+  "initiatives": [
+    {
+      "category": "Melhoria de processo",
+      "name": "Usar o check-in digital também na saída dos caminhões"
+    }
+  ],
+  "decisions": [
+    "Aprovada a CR-001: instalação de dois pontos de acesso Wi-Fi, com custo de +R$ 2.500,00 e sem mudança na data final."
+  ],
+  "actions": [
+    {
+      "description": "Atualizar o TAP e o cronograma com a CR-001",
+      "owner": "Ana Exemplo",
+      "due_date": "09/04/2027",
+      "status": "Pending"
+    },
+    {
+      "description": "Comprar os pontos de acesso Wi-Fi",
+      "owner": "Daniel Exemplo",
+      "due_date": "12/04/2027",
+      "status": "Pending"
+    },
+    {
+      "description": "Atualizar o status do RISC001 na matriz de riscos",
+      "owner": "Carla Exemplo",
+      "status": "Pending"
+    }
+  ],
+  "next_steps": [
+    "Próximo comitê em 21/04/2027.",
+    "Retomar a discussão sobre antecipar o treinamento."
+  ],
+  "prepared_by": "Carla Exemplo (PMO)"
+}

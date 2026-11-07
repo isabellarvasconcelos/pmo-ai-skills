@@ -1,0 +1,53 @@
+{
+  "language": "pt-BR",
+  "identification": {
+    "code": "PRJ-2027-001",
+    "title": "Check-in digital de entregas",
+    "date": "15/06/2027",
+    "owner": "Carla Exemplo"
+  },
+  "lessons": [
+    {
+      "date": "05/04/2027",
+      "type": "NEGATIVE",
+      "description": "A cobertura de Wi-Fi só foi medida depois do planejamento, o que gerou a CR-001.",
+      "area": "Tecnologia",
+      "action_plan": "Incluir a medição de infraestrutura na iniciação de projetos com equipamentos móveis.",
+      "owner": "Carla Exemplo",
+      "status": "OPEN",
+      "timing": "FUTURE PROJECTS"
+    },
+    {
+      "date": "18/03/2027",
+      "type": "NEGATIVE",
+      "description": "A documentação desatualizada da API do fornecedor atrasou a integração em duas semanas.",
+      "area": "Tecnologia",
+      "action_plan": "Validar a documentação técnica com o fornecedor na reunião de kickoff.",
+      "owner": "Daniel Exemplo",
+      "status": "DONE",
+      "closing_date": "10/06/2027",
+      "timing": "FUTURE PROJECTS",
+      "notes": "Item incluído no roteiro padrão de kickoff."
+    },
+    {
+      "date": "30/04/2027",
+      "type": "POSITIVE",
+      "description": "O treinamento feito na própria portaria acelerou a adaptação da equipe.",
+      "area": "Operações",
+      "action_plan": "Manter o treinamento no local de trabalho em implantações semelhantes.",
+      "owner": "Ana Exemplo",
+      "status": "DONE",
+      "closing_date": "15/06/2027",
+      "timing": "AT CLOSURE"
+    },
+    {
+      "date": "07/04/2027",
+      "type": "POSITIVE",
+      "description": "A medição semanal do tempo de atendimento permitiu acompanhar a meta desde o início da operação.",
+      "area": "Logística",
+      "action_plan": "Definir o indicador e a forma de medição já no TAP dos próximos projetos.",
+      "status": "OPEN",
+      "timing": "FUTURE PROJECTS"
+    }
+  ]
+}

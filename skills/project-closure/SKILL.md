@@ -37,3 +37,10 @@ Schedule is the duration in calendar days, from the start date to the end date. 
 - The statement that all deliverables were completed only appears when the reason is completion and the scope was completed.
 - The document must be signed by the same people who signed the charter.
 - Keep a direct, executive tone.
+
+## Language
+
+- The document is generated in English by default. If the user writes in Portuguese or asks for Portuguese, add `"language": "pt-BR"` to the input JSON (or pass `--lang pt-BR` to the script).
+- In pt-BR, labels, amounts (R$ 1.234,56) and empty fields ("a definir") come out in Brazilian Portuguese.
+- Keep the fixed values listed above as English codes in the input, even in pt-BR. The script writes them translated in the document. Write free text in the document's language.
+- Example in Portuguese: `examples/input.pt-BR.json` generates `examples/output.pt-BR.docx`. Blank template: `assets/closure_template.pt-BR.docx`.

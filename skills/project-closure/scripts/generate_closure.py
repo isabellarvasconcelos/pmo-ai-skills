@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the project closure as DOCX. Usage: generate_closure.py [input.json] output.docx (no input: blank template)."""
+"""Generates the project closure as DOCX. Usage: generate_closure.py [--lang en|pt-BR] [input.json] output.docx (no input: blank template)."""
 import json
 import sys
 from datetime import datetime
@@ -18,6 +18,84 @@ REASONS = ["COMPLETION", "REPLACEMENT", "CANCELLATION"]
 WIDTH = 17.0  # usable cm on A4 with 2 cm margins
 TBLPR_ORDER = ["tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize", "tblStyleColBandSize", "tblW",
                "jc", "tblCellSpacing", "tblInd", "tblBorders", "shd", "tblLayout", "tblCellMar", "tblLook"]
+
+LANGUAGES = ("en", "pt-BR")
+LANG = "en"
+PT_BR = {
+    "TBD": "a definir",
+    "Completion": "Conclusão",
+    "Replacement": "Substituição",
+    "Cancellation": "Cancelamento",
+    "PROJECT CLOSURE": "TERMO DE ENCERRAMENTO DO PROJETO",
+    "Project code": "Código do projeto",
+    "Project name": "Nome do projeto",
+    "Date": "Data",
+    "Owner": "Responsável",
+    "Purpose of this document": "Objetivo do documento",
+    "[project name]": "[nome do projeto]",
+    "This document formalizes the closure of the {} project, consolidating the results achieved, the main lessons learned, the deliverables and the comparison between plan and execution. With the deliverables validated, the project team's work and its responsibilities for the defined scope come to an end.": "Este documento formaliza o encerramento do projeto {}, consolidando os resultados obtidos, os principais aprendizados, as entregas realizadas e a comparação entre o planejado e o executado. Com a validação das entregas, encerra-se a atuação da equipe do projeto e as responsabilidades relacionadas ao escopo definido.",
+    "Lessons learned": "Aprendizados do projeto",
+    "Lesson learned": "Lição aprendida",
+    "Action plan": "Plano de ação",
+    "Planned x actual": "Comparativo previsto x realizado",
+    "Indicator": "Indicador",
+    "Original plan": "Previsto original",
+    "Approved changes": "Mudanças aprovadas",
+    "Updated plan": "Previsto atualizado",
+    "Actual": "Realizado",
+    "Deviation": "Desvio",
+    "{:+d} days": "{:+d} dias",
+    "{} days": "{} dias",
+    "Schedule": "Prazo",
+    "Cost": "Custo",
+    "None provided": "Nenhuma informada",
+    "Approved changes considered: ": "Mudanças aprovadas consideradas: ",
+    "Scope status": "Status do escopo",
+    "Planned scope completed?": "Escopo planejado concluído?",
+    "If not, explain": "Caso não, justificar",
+    "Deliverables accepted?": "Entregas homologadas?",
+    "Open items remaining?": "Pendências remanescentes?",
+    "If yes, describe": "Caso sim, descrever",
+    "☐ Yes  ☐ No": "☐ Sim  ☐ Não",
+    "Yes": "Sim",
+    "No": "Não",
+    "Closure reason": "Motivo do encerramento",
+    "name the project that replaces it": "indicar o projeto que o substitui",
+    "describe the reason": "descrever o motivo",
+    "The deliverables in the project scope are hereby declared completed, and the applicable documentation has been prepared, stored and made available to the responsible areas.": "Declara-se que as entregas previstas no escopo do projeto foram concluídas e que a documentação aplicável foi elaborada, armazenada e disponibilizada às áreas responsáveis.",
+    "Final remarks": "Considerações finais",
+    "Signatures": "Assinaturas",
+    "Project manager": "Gerente do projeto",
+    "Role": "Papel",
+    "Name": "Nome",
+    "Signature": "Assinatura",
+    "Project Closure": "Termo de Encerramento do Projeto"
+}
+
+
+def tr(text):
+    """Translates a fixed label to the output language. Input values stay as English codes."""
+    return PT_BR.get(text, text) if LANG == "pt-BR" else text
+
+
+def set_language(lang):
+    global LANG, TBD
+    if lang not in LANGUAGES:
+        sys.exit(f"Invalid input:\n- language must be one of: {', '.join(LANGUAGES)}")
+    LANG = lang
+    TBD = tr("TBD")
+
+
+def parse_args(argv):
+    """Separates --lang from the positional arguments."""
+    args, lang = list(argv), None
+    if "--lang" in args:
+        i = args.index("--lang")
+        if i + 1 >= len(args):
+            sys.exit(__doc__)
+        lang = args[i + 1]
+        del args[i:i + 2]
+    return args, lang
 
 
 def element(tag, **attributes):
@@ -95,14 +173,21 @@ def date(text):
 
 
 def money(v, sign=False):
-    text = f"${abs(v):,.2f}"
+    """Formats an amount as $1,234.56 or R$ 1.234,56."""
+    amount = f"{abs(v):,.2f}"
+    text = "R$ " + amount.translate(str.maketrans(",.", ".,")) if LANG == "pt-BR" else "$" + amount
     if sign:
         return ("+" if v >= 0 else "-") + text
     return text if v >= 0 else "-" + text
 
 
 def pct(v):
-    return f"{v:+.1f}%"
+    text = f"{v:+.1f}%"
+    return text.replace(".", ",") if LANG == "pt-BR" else text
+
+
+def days(v, sign=False):
+    return tr("{:+d} days").format(v) if sign else tr("{} days").format(v)
 
 
 def comparison(d):
@@ -142,44 +227,44 @@ def generate(d, target, fill):
             return ""
         return value if value not in (None, "", []) else TBD
 
-    style_run(doc.add_paragraph().add_run("PROJECT CLOSURE"), bold=True, color=PRIMARY, size=16)
+    style_run(doc.add_paragraph().add_run(tr("PROJECT CLOSURE")), bold=True, color=PRIMARY, size=16)
 
     ident = d.get("identification", {})
-    fields = [("Project code", "code"), ("Project name", "title"), ("Date", "date"), ("Owner", "owner")]
+    fields = [(tr("Project code"), "code"), (tr("Project name"), "title"), (tr("Date"), "date"), (tr("Owner"), "owner")]
     t = table(doc, len(fields), [4.5, WIDTH - 4.5])
     for i, (label, key) in enumerate(fields):
         write(t.cell(i, 0), label, bold=True)
         shade(t.cell(i, 0), LIGHT)
         write(t.cell(i, 1), v(ident.get(key)))
 
-    section(doc, "Purpose of this document")
-    name = ident.get("title") if fill and ident.get("title") else "[project name]"
-    paragraph(doc, f"This document formalizes the closure of the {name} project, consolidating the results achieved, "
-                   "the main lessons learned, the deliverables and the comparison between plan and execution. "
-                   "With the deliverables validated, the project team's work and its responsibilities for the "
-                   "defined scope come to an end.")
+    section(doc, tr("Purpose of this document"))
+    name = ident.get("title") if fill and ident.get("title") else tr("[project name]")
+    paragraph(doc, tr("This document formalizes the closure of the {} project, consolidating the results achieved, "
+                      "the main lessons learned, the deliverables and the comparison between plan and execution. "
+                      "With the deliverables validated, the project team's work and its responsibilities for the "
+                      "defined scope come to an end.").format(name))
 
-    section(doc, "Lessons learned")
+    section(doc, tr("Lessons learned"))
     lessons = d.get("lessons", []) if fill else []
     rows = lessons or ([{}] if fill else [{}] * 3)
     t = table(doc, len(rows) + 1, [1.7, 7.9, 7.4])
-    header_row(t, ["ID", "Lesson learned", "Action plan"])
+    header_row(t, ["ID", tr("Lesson learned"), tr("Action plan")])
     for i, item in enumerate(rows, 1):
-        write(t.cell(i, 0), item.get("id") or (f"LL{i:03d}" if item else ""))
+        write(t.cell(i, 0), item.get("id") or (f"{'LIC' if LANG == 'pt-BR' else 'LL'}{i:03d}" if item else ""))
         write(t.cell(i, 1), v(item.get("lesson")))
         write(t.cell(i, 2), v(item.get("action_plan")))
 
-    section(doc, "Planned x actual")
+    section(doc, tr("Planned x actual"))
     comp = comparison(d) if fill else {"schedule": {}, "cost": {}}
     t = table(doc, 3, [2.3, 2.9, 2.6, 2.9, 3.0, 3.3])
-    header_row(t, ["Indicator", "Original plan", "Approved changes", "Updated plan", "Actual", "Deviation"])
-    formats = {"schedule": lambda x, s=False: f"{x:+d} days" if s else f"{x} days", "cost": money}
-    for i, (label, key) in enumerate((("Schedule", "schedule"), ("Cost", "cost")), 1):
+    header_row(t, [tr("Indicator"), tr("Original plan"), tr("Approved changes"), tr("Updated plan"), tr("Actual"), tr("Deviation")])
+    formats = {"schedule": days, "cost": money}
+    for i, (label, key) in enumerate(((tr("Schedule"), "schedule"), (tr("Cost"), "cost")), 1):
         write(t.cell(i, 0), label, bold=True)
         x, fmt = comp[key], formats[key]
         for j, field in enumerate(("original", "changes", "updated", "actual"), 1):
             if field == "changes" and field in x and not d.get("approved_changes"):
-                write(t.cell(i, j), "None provided", hint=True)
+                write(t.cell(i, j), tr("None provided"), hint=True)
             else:
                 write(t.cell(i, j), fmt(x[field], field == "changes") if field in x else v(None))
         if "deviation" in x:
@@ -189,55 +274,55 @@ def generate(d, target, fill):
             write(t.cell(i, 5), v(None))
     changes = d.get("approved_changes", []) if fill else []
     if changes:
-        paragraph(doc, "Approved changes considered: " + "; ".join(
-            f"{c.get('code', TBD)} ({c.get('schedule_days') or 0:+d} days, {money(c.get('cost') or 0, True)})" for c in changes) + ".", hint=True)
+        paragraph(doc, tr("Approved changes considered: ") + "; ".join(
+            f"{c.get('code', TBD)} ({days(c.get('schedule_days') or 0, True)}, {money(c.get('cost') or 0, True)})" for c in changes) + ".", hint=True)
 
-    section(doc, "Scope status")
+    section(doc, tr("Scope status"))
     scope = d.get("scope", {})
-    questions = [("Planned scope completed?", "completed", "If not, explain"),
-                 ("Deliverables accepted?", "accepted", "If not, explain"),
-                 ("Open items remaining?", "open_items", "If yes, describe")]
+    questions = [(tr("Planned scope completed?"), "completed", tr("If not, explain")),
+                 (tr("Deliverables accepted?"), "accepted", tr("If not, explain")),
+                 (tr("Open items remaining?"), "open_items", tr("If yes, describe"))]
     t = table(doc, 3, [5.0, 2.6, 9.4])
     for i, (label, key, hint) in enumerate(questions):
         write(t.cell(i, 0), label, bold=True)
         shade(t.cell(i, 0), LIGHT)
         answer = scope.get(key)
         if not fill:
-            write(t.cell(i, 1), "☐ Yes  ☐ No")
+            write(t.cell(i, 1), tr("☐ Yes  ☐ No"))
             write(t.cell(i, 2), hint, hint=True)
             continue
-        write(t.cell(i, 1), {True: "Yes", False: "No", None: TBD}[answer], bold=answer is not None)
+        write(t.cell(i, 1), {True: tr("Yes"), False: tr("No"), None: TBD}[answer], bold=answer is not None)
         detail = scope.get(f"{key}_detail")
         write(t.cell(i, 2), detail or "-", hint=not detail)
 
-    section(doc, "Closure reason")
+    section(doc, tr("Closure reason"))
     reason = d.get("reason") if fill else None
-    details = {"REPLACEMENT": "name the project that replaces it", "CANCELLATION": "describe the reason"}
+    details = {"REPLACEMENT": tr("name the project that replaces it"), "CANCELLATION": tr("describe the reason")}
     for op in REASONS:
         mark = "☒" if reason == op else "☐"
-        text = f"{mark}  {op.capitalize()}"
+        text = f"{mark}  {tr(op.capitalize())}"
         if op in details:
             text += f": {d.get('reason_detail')}" if reason == op and d.get("reason_detail") else f" ({details[op]})"
         paragraph(doc, text, bold=reason == op)
     if reason == "COMPLETION" and scope.get("completed") is True:
-        paragraph(doc, "The deliverables in the project scope are hereby declared completed, and the applicable "
-                       "documentation has been prepared, stored and made available to the responsible areas.")
+        paragraph(doc, tr("The deliverables in the project scope are hereby declared completed, and the applicable "
+                       "documentation has been prepared, stored and made available to the responsible areas."))
 
-    section(doc, "Final remarks")
+    section(doc, tr("Final remarks"))
     paragraph(doc, v(d.get("remarks")) or " ")
 
-    section(doc, "Signatures")
+    section(doc, tr("Signatures"))
     signatures = d.get("signatures", {})
-    roles = [("Project manager", "manager"), ("Sponsor", "sponsor"), ("PMO", "pmo")]
+    roles = [(tr("Project manager"), "manager"), ("Sponsor", "sponsor"), ("PMO", "pmo")]
     t = table(doc, len(roles) + 1, [4.0, 6.0, 4.5, 2.5])
-    header_row(t, ["Role", "Name", "Signature", "Date"])
+    header_row(t, [tr("Role"), tr("Name"), tr("Signature"), tr("Date")])
     for i, (role, key) in enumerate(roles, 1):
         write(t.cell(i, 0), role, bold=True)
         write(t.cell(i, 1), v(signatures.get(key)))
         t.rows[i].height = Cm(1.0)
 
     doc.core_properties.author = doc.core_properties.last_modified_by = "pmo-ai-skills"
-    doc.core_properties.title = "Project Closure"
+    doc.core_properties.title = tr("Project Closure")
     doc.save(target)
     return comp
 
@@ -279,20 +364,23 @@ def validate(d):
 
 
 def main():
-    if len(sys.argv) not in (2, 3):
+    args, lang = parse_args(sys.argv[1:])
+    if len(args) not in (1, 2):
         sys.exit(__doc__)
-    if len(sys.argv) == 2:
-        generate({}, sys.argv[1], fill=False)
-        print(f"Blank template: {sys.argv[1]}")
+    if len(args) == 1:
+        set_language(lang or "en")
+        generate({}, args[0], fill=False)
+        print(f"Blank template: {args[0]}")
         return
-    data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    data = json.loads(Path(args[0]).read_text(encoding="utf-8"))
+    set_language(lang or data.get("language", "en"))
     validate(data)
-    comp = generate(data, sys.argv[2], fill=True)
+    comp = generate(data, args[1], fill=True)
     parts = []
     for label, key, fmt in (("schedule", "schedule", lambda x: f"{x:+d} days"), ("cost", "cost", lambda x: money(x, True))):
         x = comp[key]
         parts.append(f"{label} {fmt(x['deviation'])} ({pct(x['deviation_pct'])})" if x.get("deviation_pct") is not None else f"{label} {TBD}")
-    print(f"Closure: {sys.argv[2]} | deviation from the updated plan: " + ", ".join(parts))
+    print(f"Closure: {args[1]} | deviation from the updated plan: " + ", ".join(parts))
 
 
 if __name__ == "__main__":

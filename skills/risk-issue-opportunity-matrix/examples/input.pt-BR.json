@@ -1,0 +1,53 @@
+{
+  "language": "pt-BR",
+  "identification": {
+    "code": "PRJ-2027-001",
+    "title": "Check-in digital de entregas",
+    "date": "18/01/2027",
+    "owner": "Ana Exemplo"
+  },
+  "items": [
+    {
+      "description": "A cobertura de Wi-Fi na portaria pode ser insuficiente para os tablets",
+      "type": "RISK",
+      "impact": "Atraso no check-in e retorno temporário ao papel",
+      "impact_level": 4,
+      "probability": 4,
+      "response": "Mitigate",
+      "action_plan": "Medir o sinal antes da compra e ativar o modo sem conexão",
+      "cost": 2500,
+      "status": "OPEN",
+      "notes": "Vem de uma premissa do TAP."
+    },
+    {
+      "description": "A entrega dos tablets pode atrasar",
+      "type": "RISK",
+      "impact": "Adiamento do treinamento da equipe",
+      "impact_level": 3,
+      "probability": 2,
+      "response": "Mitigate",
+      "action_plan": "Fazer o pedido com 45 dias de antecedência",
+      "status": "OPEN"
+    },
+    {
+      "description": "A documentação da API do sistema de pátio está desatualizada",
+      "type": "ISSUE",
+      "impact": "Mais tempo para desenvolver a integração",
+      "impact_level": 3,
+      "probability": 5,
+      "response": "Avoid",
+      "action_plan": "Revisar a API com o fornecedor",
+      "cost": 0,
+      "status": "OPEN"
+    },
+    {
+      "description": "A solução pode ser reaproveitada em outras unidades",
+      "type": "OPPORTUNITY",
+      "impact": "Redução do custo de futuras implantações",
+      "response": "Exploit",
+      "action_plan": "Documentar a implantação como referência",
+      "status": "OPEN",
+      "notes": "Notas ainda não avaliadas."
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "language": "pt-BR",
+  "identification": {
+    "code": "PRJ-2027-001",
+    "title": "Check-in digital de entregas",
+    "change_code": "CR-001",
+    "requested_by": "Daniel Exemplo (Tecnologia)",
+    "request_date": "05/04/2027"
+  },
+  "description": "Instalar dois pontos de acesso Wi-Fi adicionais na portaria antes da instalação dos tablets.",
+  "justification": "A medição de sinal confirmou o risco RISC001: a cobertura atual não atende os tablets no pico de chegadas. Sem os pontos de acesso, o check-in dependeria do modo sem conexão o tempo todo, e a fila deixaria de ser vista em tempo real.",
+  "impacts": [
+    {
+      "aspect": "Schedule",
+      "justification": "A instalação dos tablets passa de 22/04 para 27/04/2027. A entrada em produção em 31/05 se mantém.",
+      "document": "Cronograma do projeto"
+    },
+    {
+      "aspect": "Costs",
+      "justification": "Compra e instalação de dois pontos de acesso, já previstas como plano de ação do RISC001.",
+      "document": "TAP, aba Aquisições"
+    },
+    {
+      "aspect": "Scope",
+      "justification": "A infraestrutura de rede da portaria passa a fazer parte do escopo.",
+      "document": "TAP, seção 3"
+    },
+    {
+      "aspect": "Technical",
+      "justification": "Inclusão dos novos pontos de acesso na rede corporativa.",
+      "document": "Solução técnica do TAP"
+    }
+  ],
+  "impact_summary": {
+    "schedule_days": 0,
+    "cost": 2500
+  },
+  "risks_and_impacts": {
+    "risks": "Atraso na liberação dos novos pontos de acesso pela equipe de redes.",
+    "impacts": "Sem a mudança, a meta de 8 minutos fica ameaçada nos horários de pico."
+  },
+  "execution_plan": [
+    {
+      "activity": "Comprar os pontos de acesso",
+      "owner": "Compras",
+      "date": "12/04/2027",
+      "duration": "5 dias"
+    },
+    {
+      "activity": "Instalar e configurar na rede",
+      "owner": "Tecnologia",
+      "date": "20/04/2027",
+      "duration": "2 dias"
+    },
+    {
+      "activity": "Medir o sinal novamente",
+      "owner": "Daniel Exemplo",
+      "date": "22/04/2027",
+      "duration": "1 dia"
+    }
+  ],
+  "notes": "Se aprovada, atualizar o TAP, o cronograma e o status do RISC001 na matriz de riscos."
+}

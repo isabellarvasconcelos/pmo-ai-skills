@@ -1,5 +1,7 @@
 # PMO AI Skills
 
+**English** | [Português](README.pt-BR.md)
+
 AI skills that turn project management steps into deliverables ready for review.
 
 This repository comes from real PMO practice, rewritten in a generic version. All examples use fictitious data.
@@ -30,9 +32,20 @@ cd skills/project-charter
 python scripts/generate_charter.py examples/input.json my_charter.xlsx
 ```
 
-Skills that generate files have their own script, plus a sample input and the generated output in `examples/`. Grill Me is a conversation only: see the [sample session](skills/grill-me-projects/examples/discovery-session.md).
+Skills that generate files have their own script, plus a sample input and the generated output in `examples/`. Grill Me is a conversation only: see the [sample session](skills/grill-me-projects/examples/discovery-session.md), also available [in Portuguese](skills/grill-me-projects/examples/discovery-session.pt-BR.md).
 
 All skills use the same fictitious project, a digital delivery check-in, so the numbers match from one document to the next.
+
+## Languages
+
+Documents are generated in English by default. To generate them in Brazilian Portuguese, add `"language": "pt-BR"` to the input or pass `--lang pt-BR`:
+
+```bash
+python scripts/generate_charter.py examples/input.pt-BR.json my_charter.xlsx
+python scripts/generate_charter.py --lang pt-BR blank_charter.xlsx
+```
+
+Each skill has a Portuguese example (`input.pt-BR.json` and `output.pt-BR.*`), and the blank templates exist in both languages.
 
 ## Principles
 

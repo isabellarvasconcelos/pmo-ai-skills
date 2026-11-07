@@ -1,0 +1,131 @@
+{
+  "language": "pt-BR",
+  "identification": {
+    "title": "Check-in digital de entregas",
+    "code": "PRJ-2027-001",
+    "start_date": "11/01/2027",
+    "duration": "4 meses",
+    "manager": "Ana Exemplo",
+    "sponsor": "Bruno Exemplo (Diretor de Operações)",
+    "area": "Logística",
+    "pmo": "Carla Exemplo"
+  },
+  "business_case": "O check-in de caminhões é feito em papel, o que gera filas na portaria e dificulta o acompanhamento das entregas.",
+  "objective": "Implantar o check-in digital na portaria até 31/05/2027, reduzindo o tempo médio de atendimento de 20 para 8 minutos.",
+  "as_is": "O motorista preenche uma ficha em papel, e a equipe da portaria digita os dados no sistema ao fim do turno.",
+  "to_be": "O motorista faz o check-in em um tablet, e os dados chegam ao sistema de gestão de pátio em tempo real.",
+  "product_scope": "Aplicativo de check-in em tablets na portaria, integrado ao sistema de gestão de pátio.",
+  "in_scope": [
+    "Aplicativo de check-in",
+    "Integração com o sistema de gestão de pátio",
+    "Treinamento da equipe da portaria"
+  ],
+  "out_of_scope": [
+    "Agendamento on-line de entregas",
+    "Implantação em outras unidades"
+  ],
+  "acceptance_criteria": [
+    "Tempo médio de atendimento de até 8 minutos por 30 dias",
+    "Equipe da portaria treinada, com lista de presença"
+  ],
+  "assumptions": [
+    "A portaria terá cobertura de Wi-Fi durante a implantação"
+  ],
+  "constraints": [
+    "Entrada em produção até 31/05/2027",
+    "Orçamento limitado a R$ 60.000,00"
+  ],
+  "functional_requirements": [
+    {
+      "id": "RF01",
+      "description": "Registrar placa, transportadora e nota fiscal no check-in",
+      "area": "Logística",
+      "priority": "Alta"
+    },
+    {
+      "id": "RF02",
+      "description": "Mostrar a fila de veículos em tempo real",
+      "area": "Logística",
+      "priority": "Média"
+    }
+  ],
+  "technical_requirements": [
+    {
+      "id": "RT01",
+      "description": "Manter os registros durante quedas de conexão e sincronizá-los depois",
+      "owner": "Tecnologia",
+      "priority": "Alta"
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "RN01",
+      "description": "Veículo sem nota fiscal válida não pode concluir o check-in"
+    }
+  ],
+  "solution": {
+    "description": "Aplicativo para tablets integrado por API ao sistema de gestão de pátio.",
+    "systems": "Aplicativo de check-in; sistema de gestão de pátio",
+    "interfaces": "Tela do tablet; painel da portaria",
+    "infrastructure": "Tablets; Wi-Fi"
+  },
+  "integrations": [
+    {
+      "source": "Aplicativo de check-in",
+      "target": "Sistema de gestão de pátio",
+      "type": "API REST",
+      "description": "Envio dos registros de check-in"
+    }
+  ],
+  "impacts": [
+    "Logistics",
+    "Technology",
+    "Safety"
+  ],
+  "resources": [
+    {
+      "name": "Ana Exemplo",
+      "area": "PMO",
+      "role": "Gerente do projeto, 50%"
+    },
+    {
+      "name": "Daniel Exemplo",
+      "area": "Tecnologia",
+      "role": "Desenvolvedor, 100%"
+    }
+  ],
+  "costs": [
+    {
+      "category": "Consultoria de implantação",
+      "type": "CAPEX",
+      "amount": 18000
+    },
+    {
+      "category": "Treinamento",
+      "type": "OPEX",
+      "amount": 6000
+    }
+  ],
+  "procurement": [
+    {
+      "item": "Tablet",
+      "quantity": 10,
+      "unit_price": 1800,
+      "type": "CAPEX",
+      "needed_by": "01/03/2027",
+      "owner": "Compras",
+      "status": "Planejado"
+    },
+    {
+      "item": "Licença mensal do aplicativo",
+      "quantity": 12,
+      "unit_price": 900,
+      "type": "OPEX",
+      "needed_by": "01/04/2027",
+      "owner": "Tecnologia",
+      "status": "Planejado"
+    }
+  ],
+  "status": "Under review",
+  "notes": "Empresa, pessoas e valores são fictícios."
+}

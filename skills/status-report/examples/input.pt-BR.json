@@ -1,0 +1,72 @@
+{
+  "language": "pt-BR",
+  "identification": {
+    "title": "Check-in digital de entregas",
+    "code": "PRJ-2027-001",
+    "status_date": "31/03/2027",
+    "start_date": "11/01/2027",
+    "end_date": "31/05/2027"
+  },
+  "criticality": "MEDIUM",
+  "planned": 42,
+  "actual": 38,
+  "s_curve": {
+    "periods": [
+      "jan",
+      "fev",
+      "mar",
+      "abr",
+      "mai"
+    ],
+    "planned": [
+      5,
+      18,
+      42,
+      75,
+      100
+    ],
+    "actual": [
+      5,
+      16,
+      38
+    ]
+  },
+  "upcoming_activities": [
+    {
+      "activity": "Homologar a integração com o sistema de pátio",
+      "owner": "Daniel Exemplo",
+      "end_date": "15/04/2027"
+    },
+    {
+      "activity": "Instalar os tablets na portaria",
+      "owner": "Compras",
+      "end_date": "22/04/2027"
+    },
+    {
+      "activity": "Treinar a equipe da portaria",
+      "owner": "Ana Exemplo",
+      "end_date": "30/04/2027"
+    }
+  ],
+  "late_activities": [
+    {
+      "activity": "Revisar a API com o fornecedor",
+      "area": "Tecnologia",
+      "end_date": "20/03/2027"
+    }
+  ],
+  "risks": [
+    {
+      "description": "Cobertura de Wi-Fi insuficiente na portaria",
+      "probability": 4,
+      "severity": 4,
+      "action_plan": "Medir o sinal e ativar o modo sem conexão"
+    },
+    {
+      "description": "Atraso na entrega dos tablets",
+      "probability": 2,
+      "severity": 3,
+      "action_plan": "Pedido com 45 dias de antecedência"
+    }
+  ]
+}

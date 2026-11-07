@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates a Project Charter as XLSX. Usage: generate_charter.py [input.json] output.xlsx (no input: blank template)."""
+"""Generates a Project Charter as XLSX. Usage: generate_charter.py [--lang en|pt-BR] [input.json] output.xlsx (no input: blank template)."""
 import json
 import math
 import sys
@@ -19,6 +19,127 @@ CURRENCY = '"$"#,##0.00'
 AREAS = ["Operations", "Quality", "Planning", "Logistics", "Safety", "Tax",
          "Technology", "Purchasing", "Sales", "Finance", "People", "Other"]
 STATUS = ["Approved", "Rejected", "Under review"]
+
+LANGUAGES = ("en", "pt-BR")
+LANG = "en"
+PT_BR = {
+    "TBD": "a definir",
+    "Operations": "Operações",
+    "Quality": "Qualidade",
+    "Planning": "Planejamento",
+    "Logistics": "Logística",
+    "Safety": "Segurança",
+    "Tax": "Fiscal",
+    "Technology": "Tecnologia",
+    "Purchasing": "Compras",
+    "Sales": "Comercial",
+    "Finance": "Financeiro",
+    "People": "Pessoas",
+    "Other": "Outros",
+    "Approved": "Aprovado",
+    "Rejected": "Reprovado",
+    "Under review": "Em análise",
+    "PROJECT CHARTER": "TERMO DE ABERTURA DO PROJETO",
+    "PROJECT IDENTIFICATION": "IDENTIFICAÇÃO DO PROJETO",
+    "Project title": "Título do projeto",
+    "Code": "Código",
+    "Start date": "Data de abertura",
+    "Expected duration": "Duração prevista",
+    "Project manager": "Gerente do projeto",
+    "Owning area": "Área responsável",
+    "1. BUSINESS CASE AND OBJECTIVE": "1. JUSTIFICATIVA E OBJETIVO",
+    "Business case": "Justificativa (business case)",
+    "Problem, opportunity or requirement that motivates the project.": "Problema, oportunidade ou exigência que motiva o projeto.",
+    "Objective (SMART)": "Objetivo (SMART)",
+    "Action verb + measurable result + deadline.": "Verbo no infinitivo + resultado mensurável + prazo.",
+    "2. CURRENT PROCESS x FUTURE PROCESS": "2. PROCESSO ATUAL x PROCESSO FUTURO",
+    "Current process (AS IS)": "Processo atual (AS IS)",
+    "Future process (TO BE)": "Processo futuro (TO BE)",
+    "How it works today, with its pains and limits.": "Como funciona hoje, com dores e limitações.",
+    "How it will work after the project.": "Como passará a funcionar após o projeto.",
+    "3. SCOPE": "3. ESCOPO",
+    "Product, service or result scope": "Escopo do produto, serviço ou resultado",
+    "Characteristics of the deliverable when it is done.": "Características do entregável quando pronto.",
+    "In scope": "Contempla",
+    "Out of scope": "Não contempla",
+    "Main deliverables.": "Principais entregas.",
+    "What will explicitly not be done.": "O que explicitamente não será feito.",
+    "Acceptance criteria": "Critérios de aceitação",
+    "Objective conditions to accept the deliverable.": "Condições objetivas para aceitar o entregável.",
+    "Assumptions": "Premissas",
+    "Constraints": "Restrições",
+    "What is taken as true.": "Suposições tidas como verdadeiras.",
+    "Limits of budget, time, technology and resources.": "Limites de orçamento, prazo, tecnologia e recursos.",
+    "4. REQUIREMENTS": "4. REQUISITOS",
+    "Functional requirement": "Requisito funcional",
+    "Area": "Área",
+    "Priority": "Prioridade",
+    "Technical requirement": "Requisito técnico",
+    "Owner": "Responsável",
+    "Business rule": "Regra de negócio",
+    "5. TECHNICAL SOLUTION": "5. SOLUÇÃO TÉCNICA",
+    "Solution description": "Descrição da solução",
+    "What will be implemented, developed or configured.": "O que será implementado, desenvolvido ou configurado.",
+    "Systems involved": "Sistemas envolvidos",
+    "Interfaces": "Interfaces",
+    "Infrastructure": "Infraestrutura",
+    "Source": "Origem",
+    "Target": "Destino",
+    "Type": "Tipo",
+    "Integration description": "Descrição da integração",
+    "6. OPERATIONAL IMPACTS": "6. IMPACTOS OPERACIONAIS",
+    "7. RESOURCES": "7. RECURSOS",
+    "Person or resource": "Responsável ou recurso",
+    "Role and allocation": "Papel e alocação",
+    "8. BUDGET": "8. ORÇAMENTO",
+    "Cost category (excluding procurement)": "Categoria de custo (fora de aquisições)",
+    "Amount": "Valor",
+    "Total of the \"Procurement\" sheet": "Total da aba \"Aquisições\"",
+    "TOTAL PLANNED BUDGET": "ORÇAMENTO TOTAL PREVISTO",
+    "9. STATUS AND APPROVAL": "9. STATUS E APROVAÇÃO",
+    "Role": "Papel",
+    "Name and position": "Nome e cargo",
+    "Date": "Data",
+    "Signature": "Assinatura",
+    "Notes": "Observações",
+    "PROCUREMENT LIST": "RELAÇÃO DE AQUISIÇÕES",
+    "Project": "Projeto",
+    "TOTAL PLANNED AMOUNT": "VALOR TOTAL PREVISTO",
+    "Item": "Objeto",
+    "Qty": "Qtd",
+    "Unit price": "Valor unitário",
+    "Total": "Valor total",
+    "Needed by": "Necessidade",
+    "Charter": "TAP",
+    "Procurement": "Aquisições",
+    "Project Charter": "Termo de Abertura do Projeto"
+}
+
+
+def tr(text):
+    """Translates a fixed label to the output language. Input values stay as English codes."""
+    return PT_BR.get(text, text) if LANG == "pt-BR" else text
+
+
+def set_language(lang):
+    global LANG, TBD, CURRENCY
+    if lang not in LANGUAGES:
+        sys.exit(f"Invalid input:\n- language must be one of: {', '.join(LANGUAGES)}")
+    LANG = lang
+    TBD = tr("TBD")
+    CURRENCY = '"R$" #,##0.00' if lang == "pt-BR" else '"$"#,##0.00'
+
+
+def parse_args(argv):
+    """Separates --lang from the positional arguments."""
+    args, lang = list(argv), None
+    if "--lang" in args:
+        i = args.index("--lang")
+        if i + 1 >= len(args):
+            sys.exit(__doc__)
+        lang = args[i + 1]
+        del args[i:i + 2]
+    return args, lang
 
 
 class Sheet:
@@ -106,7 +227,7 @@ class Sheet:
         for i in range(0, len(options), per_row):
             for j, option in enumerate(options[i:i + per_row]):
                 mark = "☒" if option in checked else "☐"
-                self.cell(1 + j * span, span, f"{mark}  {option}")
+                self.cell(1 + j * span, span, f"{mark}  {tr(option)}")
             self.row += 1
 
 
@@ -133,60 +254,60 @@ def validate(d):
 def charter_sheet(ws, d, fill, computed):
     s = Sheet(ws, fill)
     ident = d.get("identification", {})
-    s.cell(1, COLUMNS, "PROJECT CHARTER", bold=True, color="FFFFFF", background=PRIMARY).font = Font(
+    s.cell(1, COLUMNS, tr("PROJECT CHARTER"), bold=True, color="FFFFFF", background=PRIMARY).font = Font(
         name=FONT, size=14, bold=True, color="FFFFFF")
     ws.row_dimensions[1].height = 24
     s.row += 1
-    s.section("PROJECT IDENTIFICATION")
+    s.section(tr("PROJECT IDENTIFICATION"))
     for group in (
-        (("Project title", "title"), ("Code", "code"), ("Start date", "start_date"), ("Expected duration", "duration")),
-        (("Project manager", "manager"), ("Sponsor", "sponsor"), ("Owning area", "area"), ("PMO", "pmo")),
+        ((tr("Project title"), "title"), (tr("Code"), "code"), (tr("Start date"), "start_date"), (tr("Expected duration"), "duration")),
+        ((tr("Project manager"), "manager"), ("Sponsor", "sponsor"), (tr("Owning area"), "area"), ("PMO", "pmo")),
     ):
         s.labels([(label, 2) for label, _ in group])
         s.fields([(ident.get(key), 2, "") for _, key in group])
 
-    s.section("1. BUSINESS CASE AND OBJECTIVE")
-    s.labels([("Business case", COLUMNS)])
-    s.text(d.get("business_case"), "Problem, opportunity or requirement that motivates the project.")
-    s.labels([("Objective (SMART)", COLUMNS)])
-    s.text(d.get("objective"), "Action verb + measurable result + deadline.")
+    s.section(tr("1. BUSINESS CASE AND OBJECTIVE"))
+    s.labels([(tr("Business case"), COLUMNS)])
+    s.text(d.get("business_case"), tr("Problem, opportunity or requirement that motivates the project."))
+    s.labels([(tr("Objective (SMART)"), COLUMNS)])
+    s.text(d.get("objective"), tr("Action verb + measurable result + deadline."))
 
-    s.section("2. CURRENT PROCESS x FUTURE PROCESS")
-    s.labels([("Current process (AS IS)", 4), ("Future process (TO BE)", 4)])
-    s.fields([(d.get("as_is"), 4, "How it works today, with its pains and limits."),
-              (d.get("to_be"), 4, "How it will work after the project.")])
+    s.section(tr("2. CURRENT PROCESS x FUTURE PROCESS"))
+    s.labels([(tr("Current process (AS IS)"), 4), (tr("Future process (TO BE)"), 4)])
+    s.fields([(d.get("as_is"), 4, tr("How it works today, with its pains and limits.")),
+              (d.get("to_be"), 4, tr("How it will work after the project."))])
 
-    s.section("3. SCOPE")
-    s.labels([("Product, service or result scope", COLUMNS)])
-    s.text(d.get("product_scope"), "Characteristics of the deliverable when it is done.")
-    s.labels([("In scope", 4), ("Out of scope", 4)])
-    s.fields([(d.get("in_scope"), 4, "Main deliverables."), (d.get("out_of_scope"), 4, "What will explicitly not be done.")])
-    s.labels([("Acceptance criteria", COLUMNS)])
-    s.text(d.get("acceptance_criteria"), "Objective conditions to accept the deliverable.")
-    s.labels([("Assumptions", 4), ("Constraints", 4)])
-    s.fields([(d.get("assumptions"), 4, "What is taken as true."), (d.get("constraints"), 4, "Limits of budget, time, technology and resources.")])
+    s.section(tr("3. SCOPE"))
+    s.labels([(tr("Product, service or result scope"), COLUMNS)])
+    s.text(d.get("product_scope"), tr("Characteristics of the deliverable when it is done."))
+    s.labels([(tr("In scope"), 4), (tr("Out of scope"), 4)])
+    s.fields([(d.get("in_scope"), 4, tr("Main deliverables.")), (d.get("out_of_scope"), 4, tr("What will explicitly not be done."))])
+    s.labels([(tr("Acceptance criteria"), COLUMNS)])
+    s.text(d.get("acceptance_criteria"), tr("Objective conditions to accept the deliverable."))
+    s.labels([(tr("Assumptions"), 4), (tr("Constraints"), 4)])
+    s.fields([(d.get("assumptions"), 4, tr("What is taken as true.")), (d.get("constraints"), 4, tr("Limits of budget, time, technology and resources."))])
 
-    s.section("4. REQUIREMENTS")
-    s.table([("ID", 1, "id"), ("Functional requirement", 4, "description"), ("Area", 2, "area"), ("Priority", 1, "priority")], d.get("functional_requirements"))
-    s.table([("ID", 1, "id"), ("Technical requirement", 4, "description"), ("Owner", 2, "owner"), ("Priority", 1, "priority")], d.get("technical_requirements"))
-    s.table([("ID", 1, "id"), ("Business rule", 7, "description")], d.get("business_rules"))
+    s.section(tr("4. REQUIREMENTS"))
+    s.table([("ID", 1, "id"), (tr("Functional requirement"), 4, "description"), (tr("Area"), 2, "area"), (tr("Priority"), 1, "priority")], d.get("functional_requirements"))
+    s.table([("ID", 1, "id"), (tr("Technical requirement"), 4, "description"), (tr("Owner"), 2, "owner"), (tr("Priority"), 1, "priority")], d.get("technical_requirements"))
+    s.table([("ID", 1, "id"), (tr("Business rule"), 7, "description")], d.get("business_rules"))
 
-    s.section("5. TECHNICAL SOLUTION")
+    s.section(tr("5. TECHNICAL SOLUTION"))
     sol = d.get("solution", {})
-    s.labels([("Solution description", COLUMNS)])
-    s.text(sol.get("description"), "What will be implemented, developed or configured.")
-    s.labels([("Systems involved", 3), ("Interfaces", 3), ("Infrastructure", 2)])
+    s.labels([(tr("Solution description"), COLUMNS)])
+    s.text(sol.get("description"), tr("What will be implemented, developed or configured."))
+    s.labels([(tr("Systems involved"), 3), (tr("Interfaces"), 3), (tr("Infrastructure"), 2)])
     s.fields([(sol.get("systems"), 3, ""), (sol.get("interfaces"), 3, ""), (sol.get("infrastructure"), 2, "")])
-    s.table([("Source", 2, "source"), ("Target", 2, "target"), ("Type", 1, "type"), ("Integration description", 3, "description")], d.get("integrations"))
+    s.table([(tr("Source"), 2, "source"), (tr("Target"), 2, "target"), (tr("Type"), 1, "type"), (tr("Integration description"), 3, "description")], d.get("integrations"))
 
-    s.section("6. OPERATIONAL IMPACTS")
+    s.section(tr("6. OPERATIONAL IMPACTS"))
     s.checkboxes(AREAS, d.get("impacts") or [])
 
-    s.section("7. RESOURCES")
-    s.table([("Person or resource", 3, "name"), ("Area", 2, "area"), ("Role and allocation", 3, "role")], d.get("resources"))
+    s.section(tr("7. RESOURCES"))
+    s.table([(tr("Person or resource"), 3, "name"), (tr("Area"), 2, "area"), (tr("Role and allocation"), 3, "role")], d.get("resources"))
 
-    s.section("8. BUDGET")
-    s.labels([("Cost category (excluding procurement)", 4), ("Type", 2), ("Amount", 2)])
+    s.section(tr("8. BUDGET"))
+    s.labels([(tr("Cost category (excluding procurement)"), 4), (tr("Type"), 2), (tr("Amount"), 2)])
     costs = d.get("costs") or []
     first = s.row
     for item in costs if fill and costs else [{}] * (3 if not fill else 1):
@@ -202,22 +323,22 @@ def charter_sheet(ws, d, fill, computed):
     purchases = sum((i.get("quantity") or 0) * (i.get("unit_price") or 0) for i in d.get("procurement", [])) if fill else 0
     computed.update({f"G{s.row}": subtotal, f"G{s.row + 1}": purchases, f"G{s.row + 2}": subtotal + purchases})
     s.row += 1
-    s.cell(1, 6, 'Total of the "Procurement" sheet', bold=True, background=LIGHT)
-    s.cell(7, 2, "='Procurement'!D4", bold=True, number_format=CURRENCY)
+    s.cell(1, 6, tr('Total of the "Procurement" sheet'), bold=True, background=LIGHT)
+    s.cell(7, 2, f"='{tr('Procurement')}'!D4", bold=True, number_format=CURRENCY)
     s.row += 1
-    s.cell(1, 6, "TOTAL PLANNED BUDGET", bold=True, color="FFFFFF", background=PRIMARY)
+    s.cell(1, 6, tr("TOTAL PLANNED BUDGET"), bold=True, color="FFFFFF", background=PRIMARY)
     s.cell(7, 2, f"=G{s.row - 2}+G{s.row - 1}", bold=True, number_format=CURRENCY)
     s.row += 1
 
-    s.section("9. STATUS AND APPROVAL")
+    s.section(tr("9. STATUS AND APPROVAL"))
     s.checkboxes(STATUS, [d.get("status")], per_row=3)
-    roles = ("Project manager", "Sponsor", "PMO")
-    s.table([("Role", 2, "role"), ("Name and position", 3, "name"), ("Date", 1, "date"), ("Signature", 2, "signature")],
+    roles = (tr("Project manager"), "Sponsor", "PMO")
+    s.table([(tr("Role"), 2, "role"), (tr("Name and position"), 3, "name"), (tr("Date"), 1, "date"), (tr("Signature"), 2, "signature")],
             [{"role": r} for r in roles] if fill else [{}] * 3)
     if not fill:
         for i, r in enumerate(roles):
             ws.cell(s.row - 3 + i, 1, r)
-    s.labels([("Notes", COLUMNS)])
+    s.labels([(tr("Notes"), COLUMNS)])
     s.text(d.get("notes"))
 
     ws.sheet_view.showGridLines = False
@@ -233,19 +354,19 @@ def procurement_sheet(ws, d, fill, computed):
     light = PatternFill("solid", fgColor=LIGHT)
     font = lambda **k: Font(name=FONT, size=10, **k)
     ws.merge_cells("A1:H1")
-    ws["A1"] = "PROCUREMENT LIST"
+    ws["A1"] = tr("PROCUREMENT LIST")
     ws["A1"].font, ws["A1"].fill = font(bold=True, color="FFFFFF"), dark
     ident = d.get("identification", {})
-    ws["A2"], ws["B2"] = "Project", ident.get("title") or (TBD if fill else None)
-    ws["A3"], ws["B3"] = "Code", ident.get("code") or (TBD if fill else None)
+    ws["A2"], ws["B2"] = tr("Project"), ident.get("title") or (TBD if fill else None)
+    ws["A3"], ws["B3"] = tr("Code"), ident.get("code") or (TBD if fill else None)
     ws.merge_cells("B2:H2")
     ws.merge_cells("B3:H3")
     ws["A2"].font = ws["A3"].font = font(bold=True)
     ws["B2"].font = ws["B3"].font = font()
     ws.merge_cells("A4:C4")
-    ws["A4"] = "TOTAL PLANNED AMOUNT"
+    ws["A4"] = tr("TOTAL PLANNED AMOUNT")
     ws["A4"].font, ws["A4"].fill = font(bold=True), light
-    for i, h in enumerate(["Item", "Qty", "Unit price", "Total", "Type", "Needed by", "Owner", "Status"], 1):
+    for i, h in enumerate([tr("Item"), tr("Qty"), tr("Unit price"), tr("Total"), tr("Type"), tr("Needed by"), tr("Owner"), "Status"], 1):
         c = ws.cell(5, i, h)
         c.font, c.fill, c.border = font(bold=True), light, BORDER
     items = (d.get("procurement") or []) if fill else []
@@ -276,10 +397,10 @@ def generate(d, target, fill):
     wb = Workbook()
     charter, procurement = {}, {}
     charter_sheet(wb.active, d, fill, charter)
-    wb.active.title = "Charter"
-    procurement_sheet(wb.create_sheet("Procurement"), d, fill, procurement)
+    wb.active.title = tr("Charter")
+    procurement_sheet(wb.create_sheet(tr("Procurement")), d, fill, procurement)
     wb.properties.creator = wb.properties.lastModifiedBy = "pmo-ai-skills"
-    wb.properties.title = "Project Charter"
+    wb.properties.title = tr("Project Charter")
     wb.calculation.fullCalcOnLoad = True
     wb.save(target)
     store_values(target, {1: charter, 2: procurement})
@@ -322,16 +443,19 @@ def planned_total(d):
 
 
 def main():
-    if len(sys.argv) not in (2, 3):
+    args, lang = parse_args(sys.argv[1:])
+    if len(args) not in (1, 2):
         sys.exit(__doc__)
-    if len(sys.argv) == 2:
-        generate({}, sys.argv[1], fill=False)
-        print(f"Blank template: {sys.argv[1]}")
+    if len(args) == 1:
+        set_language(lang or "en")
+        generate({}, args[0], fill=False)
+        print(f"Blank template: {args[0]}")
         return
-    data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    data = json.loads(Path(args[0]).read_text(encoding="utf-8"))
+    set_language(lang or data.get("language", "en"))
     validate(data)
-    generate(data, sys.argv[2], fill=True)
-    print(f"Charter: {sys.argv[2]} | planned budget: ${planned_total(data):,.2f}")
+    generate(data, args[1], fill=True)
+    print(f"Charter: {args[1]} | planned budget: ${planned_total(data):,.2f}")
 
 
 if __name__ == "__main__":

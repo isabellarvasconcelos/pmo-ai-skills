@@ -25,3 +25,10 @@ See `examples/meeting-notes.md` for an example of loose notes that became the mi
 - Use as action item `status`: `Pending`, `In progress` or `Done`.
 - The mapped initiatives section only appears when there are initiatives. It records new demands raised in the meeting, for later prioritization.
 - Keep a direct, executive tone.
+
+## Language
+
+- The document is generated in English by default. If the user writes in Portuguese or asks for Portuguese, add `"language": "pt-BR"` to the input JSON (or pass `--lang pt-BR` to the script).
+- In pt-BR, labels, amounts (R$ 1.234,56) and empty fields ("a definir") come out in Brazilian Portuguese.
+- Keep the fixed values listed above as English codes in the input, even in pt-BR. The script writes them translated in the document. Write free text in the document's language.
+- Example in Portuguese: `examples/input.pt-BR.json` generates `examples/output.pt-BR.docx`. Blank template: `assets/minutes_template.pt-BR.docx`. Loose notes in Portuguese: `examples/meeting-notes.pt-BR.md`.

@@ -36,3 +36,10 @@ The rating is impact (1 to 5) x probability (1 to 5):
 - Use as `status`: `OPEN`, `CLOSED` or `CANCELLED`.
 - Do not type the rating by hand. It comes from a formula in the spreadsheet.
 - Keep a direct, executive tone.
+
+## Language
+
+- The document is generated in English by default. If the user writes in Portuguese or asks for Portuguese, add `"language": "pt-BR"` to the input JSON (or pass `--lang pt-BR` to the script).
+- In pt-BR, labels, amounts (R$ 1.234,56) and empty fields ("a definir") come out in Brazilian Portuguese.
+- Keep the fixed values listed above as English codes in the input, even in pt-BR. The script writes them translated in the document. Write free text in the document's language.
+- Example in Portuguese: `examples/input.pt-BR.json` generates `examples/output.pt-BR.xlsx`. Blank template: `assets/matrix_template.pt-BR.xlsx`. New IDs use the `RISC` prefix in pt-BR (`RISC001`).

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the status report as a one-slide PPTX. Usage: generate_status.py input.json output.pptx"""
+"""Generates the status report as a one-slide PPTX. Usage: generate_status.py [--lang en|pt-BR] input.json output.pptx"""
 import json
 import sys
 from pathlib import Path
@@ -21,6 +21,66 @@ ACTIONS = {"LOW": "escalate to the project manager", "MEDIUM": "escalate to the 
 LIGHTS = {"Green": ("2E8B57", "On track"), "Yellow": ("E0A800", "Attention"),
           "Red": ("C0392B", "At risk of delay"), "Gray": ("9E9E9E", TBD)}
 LIMITS = {"upcoming_activities": 5, "late_activities": 5, "risks": 4}
+
+LANGUAGES = ("en", "pt-BR")
+LANG = "en"
+PT_BR = {
+    "TBD": "a definir",
+    "LOW": "BAIXO",
+    "MEDIUM": "MÉDIO",
+    "HIGH": "ALTO",
+    "On track": "No prazo",
+    "Attention": "Atenção",
+    "At risk of delay": "Risco de atraso",
+    "Planned": "Previsto",
+    "Actual": "Realizado",
+    "Code:": "Código:",
+    "Status date:": "Data do status:",
+    "Start:": "Início:",
+    "End:": "Fim:",
+    "Criticality:": "Criticidade:",
+    "Planned:": "Previsto:",
+    "Actual:": "Realizado:",
+    "Deviation:": "Desvio:",
+    "Status:": "Farol:",
+    "Project S-curve": "Curva S do projeto",
+    "Upcoming activities": "Próximas atividades",
+    "Activity": "Atividade",
+    "Owner": "Responsável",
+    "End date": "Data fim",
+    "Late or at-risk activities": "Atividades atrasadas ou com risco de atraso",
+    "Area": "Área",
+    "Project risks": "Riscos do projeto",
+    "Risk": "Risco",
+    "Prob.": "Prob.",
+    "Sev.": "Sev.",
+    "Action plan": "Plano de ação"
+}
+
+
+def tr(text):
+    """Translates a fixed label to the output language. Input values stay as English codes."""
+    return PT_BR.get(text, text) if LANG == "pt-BR" else text
+
+
+def set_language(lang):
+    global LANG, TBD
+    if lang not in LANGUAGES:
+        sys.exit(f"Invalid input:\n- language must be one of: {', '.join(LANGUAGES)}")
+    LANG = lang
+    TBD = tr("TBD")
+
+
+def parse_args(argv):
+    """Separates --lang from the positional arguments."""
+    args, lang = list(argv), None
+    if "--lang" in args:
+        i = args.index("--lang")
+        if i + 1 >= len(args):
+            sys.exit(__doc__)
+        lang = args[i + 1]
+        del args[i:i + 2]
+    return args, lang
 
 
 def color(hex_code):
@@ -58,6 +118,11 @@ def validate(d):
                 errors.append(f"risks[{i}].{field} must be an integer from 1 to 5")
     if errors:
         sys.exit("Invalid input:\n- " + "\n- ".join(errors))
+
+
+def decimal(text):
+    """Uses a decimal comma in pt-BR."""
+    return text.replace(".", ",") if LANG == "pt-BR" else text
 
 
 def traffic_light(d):
@@ -148,7 +213,7 @@ def s_curve(slide, x, y, w, h, curve):
     data = CategoryChartData(number_format='0"%"')
     data.categories = curve["periods"]
     n = len(curve["periods"])
-    for name, series in (("Planned", "planned"), ("Actual", "actual")):
+    for name, series in ((tr("Planned"), "planned"), (tr("Actual"), "actual")):
         values = list(curve.get(series, []))
         data.add_series(name, values + [None] * (n - len(values)))
     chart = slide.shapes.add_chart(XL_CHART_TYPE.LINE_MARKERS, Inches(x), Inches(y), Inches(w), Inches(h), data).chart
@@ -176,7 +241,7 @@ def s_curve(slide, x, y, w, h, curve):
 def generate(d, target):
     ident = d.get("identification", {})
     v = lambda key: ident.get(key) or TBD
-    pct = lambda key: f"{d[key]:g}%" if d.get(key) is not None else TBD
+    pct = lambda key: decimal(f"{d[key]:g}%") if d.get(key) is not None else TBD
     light, deviation = traffic_light(d)
     warnings = []
 
@@ -186,41 +251,41 @@ def generate(d, target):
 
     rectangle(s, 0, 0, 10, 0.62, fill=PRIMARY)
     text(s, 0.2, 0.06, 6.3, 0.5, f"STATUS REPORT | {v('title')}", size=15, bold=True, text_color="FFFFFF")
-    for i, (label, value) in enumerate((("Code:", v("code")), ("Status date:", v("status_date")))):
+    for i, (label, value) in enumerate(((tr("Code:"), v("code")), (tr("Status date:"), v("status_date")))):
         text(s, 6.6, 0.11 + i * 0.2, 1.3, 0.18, label, size=9, text_color="FFFFFF", align=PP_ALIGN.RIGHT)
         text(s, 7.95, 0.11 + i * 0.2, 1.95, 0.18, value, size=9, bold=True, text_color="FFFFFF")
 
     rectangle(s, 0, 0.62, 10, 0.45, fill=LIGHT)
-    for i, (label, value) in enumerate((("Start:", v("start_date")), ("End:", v("end_date")))):
+    for i, (label, value) in enumerate(((tr("Start:"), v("start_date")), (tr("End:"), v("end_date")))):
         text(s, 0.2, 0.66 + i * 0.18, 0.55, 0.18, label, bold=True)
         text(s, 0.75, 0.66 + i * 0.18, 1.0, 0.18, value)
-    text(s, 1.8, 0.66, 0.85, 0.36, "Criticality:", bold=True)
-    text(s, 2.62, 0.66, 0.8, 0.36, d.get("criticality") or TBD)
-    for x, label, value in ((3.5, "Planned:", pct("planned")), (4.85, "Actual:", pct("actual"))):
+    text(s, 1.8, 0.66, 0.85, 0.36, tr("Criticality:"), bold=True)
+    text(s, 2.62, 0.66, 0.8, 0.36, tr(d.get("criticality")) or TBD)
+    for x, label, value in ((3.5, tr("Planned:"), pct("planned")), (4.85, tr("Actual:"), pct("actual"))):
         text(s, x, 0.66, 0.75, 0.36, label, bold=True)
         text(s, x + 0.75, 0.66, 0.6, 0.36, value, size=12 if value != TBD else 9, bold=True, text_color=PRIMARY)
-    text(s, 6.2, 0.66, 0.75, 0.36, "Deviation:", bold=True)
-    text(s, 6.9, 0.66, 0.7, 0.36, f"{deviation:.1f}%" if deviation is not None else TBD,
+    text(s, 6.2, 0.66, 0.75, 0.36, tr("Deviation:"), bold=True)
+    text(s, 6.9, 0.66, 0.7, 0.36, decimal(f"{deviation:.1f}%") if deviation is not None else TBD,
          size=12 if deviation is not None else 9, bold=True, text_color=PRIMARY)
     hex_code, label = LIGHTS[light]
-    text(s, 7.65, 0.66, 0.55, 0.36, "Status:", bold=True)
+    text(s, 7.65, 0.66, 0.55, 0.36, tr("Status:"), bold=True)
     rectangle(s, 8.2, 0.73, 0.22, 0.22, fill=hex_code, shape=MSO_SHAPE.OVAL)
-    text(s, 8.48, 0.66, 1.45, 0.36, label, bold=True, text_color=hex_code)
+    text(s, 8.48, 0.66, 1.45, 0.36, tr(label), bold=True, text_color=hex_code)
 
-    panel(s, 0.2, 1.15, 4.75, 2.05, "Project S-curve")
+    panel(s, 0.2, 1.15, 4.75, 2.05, tr("Project S-curve"))
     s_curve(s, 0.3, 1.48, 4.55, 1.68, d.get("s_curve"))
 
-    panel(s, 5.05, 1.15, 4.75, 2.05, "Upcoming activities")
-    table(s, 5.15, 1.55, 4.45, [("Activity", 0.55, lambda a: a.get("activity")), ("Owner", 0.25, lambda a: a.get("owner")),
-                                ("End date", 0.2, lambda a: a.get("end_date"))], d.get("upcoming_activities", []), "upcoming_activities", warnings)
+    panel(s, 5.05, 1.15, 4.75, 2.05, tr("Upcoming activities"))
+    table(s, 5.15, 1.55, 4.45, [(tr("Activity"), 0.55, lambda a: a.get("activity")), (tr("Owner"), 0.25, lambda a: a.get("owner")),
+                                (tr("End date"), 0.2, lambda a: a.get("end_date"))], d.get("upcoming_activities", []), "upcoming_activities", warnings)
 
-    panel(s, 0.2, 3.3, 4.75, 2.15, "Late or at-risk activities")
-    table(s, 0.3, 3.7, 4.45, [("Activity", 0.55, lambda a: a.get("activity")), ("Area", 0.25, lambda a: a.get("area")),
-                              ("End date", 0.2, lambda a: a.get("end_date"))], d.get("late_activities", []), "late_activities", warnings)
+    panel(s, 0.2, 3.3, 4.75, 2.15, tr("Late or at-risk activities"))
+    table(s, 0.3, 3.7, 4.45, [(tr("Activity"), 0.55, lambda a: a.get("activity")), (tr("Area"), 0.25, lambda a: a.get("area")),
+                              (tr("End date"), 0.2, lambda a: a.get("end_date"))], d.get("late_activities", []), "late_activities", warnings)
 
-    panel(s, 5.05, 3.3, 4.75, 2.15, "Project risks")
-    table(s, 5.15, 3.7, 4.45, [("Risk", 0.38, lambda r: r.get("description")), ("Prob.", 0.12, lambda r: r.get("probability")),
-                               ("Sev.", 0.11, lambda r: r.get("severity")), ("Action plan", 0.39, lambda r: r.get("action_plan"))],
+    panel(s, 5.05, 3.3, 4.75, 2.15, tr("Project risks"))
+    table(s, 5.15, 3.7, 4.45, [(tr("Risk"), 0.38, lambda r: r.get("description")), (tr("Prob."), 0.12, lambda r: r.get("probability")),
+                               (tr("Sev."), 0.11, lambda r: r.get("severity")), (tr("Action plan"), 0.39, lambda r: r.get("action_plan"))],
           d.get("risks", []), "risks", warnings)
 
     prs.core_properties.author = prs.core_properties.last_modified_by = "pmo-ai-skills"
@@ -230,12 +295,14 @@ def generate(d, target):
 
 
 def main():
-    if len(sys.argv) != 3:
+    args, lang = parse_args(sys.argv[1:])
+    if len(args) != 2:
         sys.exit(__doc__)
-    data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    data = json.loads(Path(args[0]).read_text(encoding="utf-8"))
+    set_language(lang or data.get("language", "en"))
     validate(data)
-    light, deviation, warnings = generate(data, sys.argv[2])
-    summary = f"Status: {sys.argv[2]} | light {light}"
+    light, deviation, warnings = generate(data, args[1])
+    summary = f"Status: {args[1]} | light {light}"
     if deviation is not None:
         summary += f" | deviation {deviation:.1f}%"
     if light == "Red":

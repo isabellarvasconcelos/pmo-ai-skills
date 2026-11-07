@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates meeting minutes as DOCX. Usage: generate_minutes.py [input.json] output.docx (no input: blank template)."""
+"""Generates meeting minutes as DOCX. Usage: generate_minutes.py [--lang en|pt-BR] [input.json] output.docx (no input: blank template)."""
 import json
 import sys
 from pathlib import Path
@@ -17,6 +17,69 @@ STATUS = ["Pending", "In progress", "Done"]
 WIDTH = 17.0  # usable cm on A4 with 2 cm margins
 TBLPR_ORDER = ["tblStyle", "tblpPr", "tblOverlap", "bidiVisual", "tblStyleRowBandSize", "tblStyleColBandSize", "tblW",
                "jc", "tblCellSpacing", "tblInd", "tblBorders", "shd", "tblLayout", "tblCellMar", "tblLook"]
+
+LANGUAGES = ("en", "pt-BR")
+LANG = "en"
+PT_BR = {
+    "TBD": "a definir",
+    "Pending": "Pendente",
+    "In progress": "Em andamento",
+    "Done": "Concluído",
+    "Page ": "Página ",
+    "MEETING MINUTES": "ATA DE REUNIÃO",
+    "Title": "Título",
+    "Project or area": "Projeto ou área",
+    "Date": "Data",
+    "Time": "Horário",
+    "Duration": "Duração",
+    "Location or platform": "Local ou plataforma",
+    "Participants": "Participantes",
+    "Meeting objective": "Objetivo da reunião",
+    "Why the meeting took place and what it needed to produce.": "Por que a reunião aconteceu e o que precisava sair dela.",
+    "Executive summary": "Resumo executivo",
+    "Main points discussed, in a few lines.": "Principais pontos discutidos, em poucas linhas.",
+    "Mapped initiatives and projects": "Iniciativas e projetos mapeados",
+    "Category": "Categoria",
+    "Initiative or project": "Iniciativa ou projeto",
+    "Decisions": "Decisões",
+    "No decisions recorded in this meeting.": "Nenhuma decisão registrada nesta reunião.",
+    "Decision": "Decisão",
+    "Action items": "Itens de ação",
+    "No action items recorded in this meeting.": "Nenhum item de ação registrado nesta reunião.",
+    "Action item": "Item de ação",
+    "Owner": "Responsável",
+    "Due date": "Prazo",
+    "Next steps": "Próximos passos",
+    "Next meeting, expected deliverables and follow-ups.": "Próxima reunião, entregas esperadas e encaminhamentos.",
+    "[name]": "[nome]",
+    "Minutes prepared by {}.": "Ata elaborada por {}.",
+    "Meeting Minutes": "Ata de Reunião"
+}
+
+
+def tr(text):
+    """Translates a fixed label to the output language. Input values stay as English codes."""
+    return PT_BR.get(text, text) if LANG == "pt-BR" else text
+
+
+def set_language(lang):
+    global LANG, TBD
+    if lang not in LANGUAGES:
+        sys.exit(f"Invalid input:\n- language must be one of: {', '.join(LANGUAGES)}")
+    LANG = lang
+    TBD = tr("TBD")
+
+
+def parse_args(argv):
+    """Separates --lang from the positional arguments."""
+    args, lang = list(argv), None
+    if "--lang" in args:
+        i = args.index("--lang")
+        if i + 1 >= len(args):
+            sys.exit(__doc__)
+        lang = args[i + 1]
+        del args[i:i + 2]
+    return args, lang
 
 
 def element(tag, **attributes):
@@ -96,7 +159,7 @@ def paragraph(doc, text, hint=False):
 
 
 def page_number(footer_paragraph):
-    style_run(footer_paragraph.add_run("Page "), color=HINT, size=8)
+    style_run(footer_paragraph.add_run(tr("Page ")), color=HINT, size=8)
     run = footer_paragraph.add_run()
     style_run(run, color=HINT, size=8)
     run._r.append(element("fldChar", fldCharType="begin"))
@@ -126,14 +189,14 @@ def generate(d, target, fill):
         doc.styles[style].font.size = Pt(10)
     page_number(sec.footer.paragraphs[0])
 
-    style_run(doc.add_paragraph().add_run("MEETING MINUTES"), bold=True, color=PRIMARY, size=16)
+    style_run(doc.add_paragraph().add_run(tr("MEETING MINUTES")), bold=True, color=PRIMARY, size=16)
 
     ident = d.get("identification", {})
     participants = d.get("participants", [])
     participant_text = "; ".join(f"{p['name']} ({p['role']})" if p.get("role") else p["name"] for p in participants)
-    fields = [("Title", ident.get("title")), ("Project or area", ident.get("project")), ("Date", ident.get("date")),
-              ("Time", ident.get("time")), ("Duration", ident.get("duration")), ("Location or platform", ident.get("location")),
-              ("Participants", participant_text)]
+    fields = [(tr("Title"), ident.get("title")), (tr("Project or area"), ident.get("project")), (tr("Date"), ident.get("date")),
+              (tr("Time"), ident.get("time")), (tr("Duration"), ident.get("duration")), (tr("Location or platform"), ident.get("location")),
+              (tr("Participants"), participant_text)]
     t = table(doc, len(fields), [4.5, WIDTH - 4.5])
     for i, (label, value) in enumerate(fields):
         write(t.cell(i, 0), label, bold=True)
@@ -141,67 +204,68 @@ def generate(d, target, fill):
         text, hint = v(value)
         write(t.cell(i, 1), text, hint=hint)
 
-    section(doc, "Meeting objective")
-    paragraph(doc, *v(d.get("objective"), "Why the meeting took place and what it needed to produce."))
+    section(doc, tr("Meeting objective"))
+    paragraph(doc, *v(d.get("objective"), tr("Why the meeting took place and what it needed to produce.")))
 
-    section(doc, "Executive summary")
+    section(doc, tr("Executive summary"))
     summary = d.get("summary")
     if fill and isinstance(summary, list) and summary:
         for item in summary:
             bullet(doc, item)
     else:
-        paragraph(doc, *v(summary, "Main points discussed, in a few lines."))
+        paragraph(doc, *v(summary, tr("Main points discussed, in a few lines.")))
 
     initiatives = d.get("initiatives", [])
     if initiatives or not fill:
-        section(doc, "Mapped initiatives and projects")
+        section(doc, tr("Mapped initiatives and projects"))
         rows = initiatives or [{}] * 2
         t = table(doc, len(rows) + 1, [5.0, WIDTH - 5.0])
-        header_row(t, ["Category", "Initiative or project"])
+        header_row(t, [tr("Category"), tr("Initiative or project")])
         for i, item in enumerate(rows, 1):
             write(t.cell(i, 0), item.get("category") or (TBD if fill else ""))
             write(t.cell(i, 1), item.get("name") or (TBD if fill else ""))
 
-    section(doc, "Decisions")
+    section(doc, tr("Decisions"))
     decisions = d.get("decisions", []) if fill else []
     if fill and not decisions:
-        paragraph(doc, "No decisions recorded in this meeting.")
+        paragraph(doc, tr("No decisions recorded in this meeting."))
     else:
         rows = decisions or [""] * 3
         t = table(doc, len(rows) + 1, [1.2, WIDTH - 1.2])
-        header_row(t, ["#", "Decision"])
+        header_row(t, ["#", tr("Decision")])
         for i, decision in enumerate(rows, 1):
             write(t.cell(i, 0), str(i))
             write(t.cell(i, 1), decision)
 
-    section(doc, "Action items")
+    section(doc, tr("Action items"))
     actions = d.get("actions", []) if fill else []
     if fill and not actions:
-        paragraph(doc, "No action items recorded in this meeting.")
+        paragraph(doc, tr("No action items recorded in this meeting."))
     else:
         rows = actions or [{}] * 3
         t = table(doc, len(rows) + 1, [1.2, 7.8, 3.4, 2.2, 2.4])
-        header_row(t, ["#", "Action item", "Owner", "Due date", "Status"])
+        header_row(t, ["#", tr("Action item"), tr("Owner"), tr("Due date"), "Status"])
         for i, item in enumerate(rows, 1):
             write(t.cell(i, 0), str(i))
             for j, key in enumerate(("description", "owner", "due_date", "status"), 1):
-                write(t.cell(i, j), item.get(key) or (TBD if fill else ""))
+                value = item.get(key) or (TBD if fill else "")
+                write(t.cell(i, j), tr(value) if key == "status" else value)
 
-    section(doc, "Next steps")
+    section(doc, tr("Next steps"))
     steps = d.get("next_steps", [])
     if fill and steps:
         for step in steps:
             bullet(doc, step)
     else:
-        paragraph(doc, *v(None, "Next meeting, expected deliverables and follow-ups."))
+        paragraph(doc, *v(None, tr("Next meeting, expected deliverables and follow-ups.")))
 
     p = doc.add_paragraph()
     p.paragraph_format.space_before = Pt(14)
-    text, _ = v(d.get("prepared_by"), "[name]")
-    style_run(p.add_run(f"Minutes prepared by {text}."), color=HINT, italic=True, size=9)
+    text, _ = v(d.get("prepared_by"), tr("[name]"))
+    style_run(p.add_run(tr("Minutes prepared by {}.").format(text)), color=HINT, italic=True, size=9)
 
     doc.core_properties.author = doc.core_properties.last_modified_by = "pmo-ai-skills"
-    doc.core_properties.title = "Meeting Minutes"
+    doc.core_properties.title = tr("Meeting Minutes")
     doc.save(target)
 
 
@@ -223,18 +287,21 @@ def validate(d):
 
 
 def main():
-    if len(sys.argv) not in (2, 3):
+    args, lang = parse_args(sys.argv[1:])
+    if len(args) not in (1, 2):
         sys.exit(__doc__)
-    if len(sys.argv) == 2:
-        generate({}, sys.argv[1], fill=False)
-        print(f"Blank template: {sys.argv[1]}")
+    if len(args) == 1:
+        set_language(lang or "en")
+        generate({}, args[0], fill=False)
+        print(f"Blank template: {args[0]}")
         return
-    data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    data = json.loads(Path(args[0]).read_text(encoding="utf-8"))
+    set_language(lang or data.get("language", "en"))
     validate(data)
-    generate(data, sys.argv[2], fill=True)
+    generate(data, args[1], fill=True)
     actions = data.get("actions", [])
     gaps = sum(1 for a in actions if not a.get("owner") or not a.get("due_date"))
-    print(f"Minutes: {sys.argv[2]} | {len(data.get('decisions', []))} decision(s) | {len(actions)} action(s)"
+    print(f"Minutes: {args[1]} | {len(data.get('decisions', []))} decision(s) | {len(actions)} action(s)"
           + (f" | {gaps} action(s) without owner or due date" if gaps else ""))
 
 
